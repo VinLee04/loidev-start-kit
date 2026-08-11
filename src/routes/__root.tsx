@@ -12,6 +12,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner';
+import { ThemeProvider } from '#/components/ui/theme-provider.tsx';
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -48,8 +49,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Toaster position='top-center' richColors/>
-        {children}
+        <Toaster position='top-center' richColors />
+        <ThemeProvider defaultTheme="system" storageKey="theme">
+          {children}
+        </ThemeProvider>
+
         <TanStackDevtools
           config={{
             position: 'bottom-right',
