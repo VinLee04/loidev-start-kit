@@ -11,18 +11,21 @@ export function TextField({
   label,
   type = "text",
   placeholder,
+  autoFocus,
 }: {
   label?: string
   type?: "text" | "email" | "password"
   placeholder?: string
+  autoFocus?: boolean
 }) {
   const field = useFieldContext<string>()
   const { isInvalid, fieldErrors } = useFieldStatus()
 
   return (
-    <Field data-invalid={isInvalid}>
+    <Field data-invalid={isInvalid} className="gap-1.5">
       {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
       <Input
+        autoComplete='off'
         id={field.name}
         name={field.name}
         type={type}
@@ -31,6 +34,7 @@ export function TextField({
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
         aria-invalid={isInvalid}
+        autoFocus={autoFocus}
       />
       {isInvalid && <FieldError errors={fieldErrors} />}
     </Field>
@@ -111,7 +115,7 @@ export function SubscribeButton({ label }: { label: string }) {
   return (
     <form.Subscribe selector={(s) => s.isSubmitting}>
       {(isSubmitting) => (
-        <Button type="submit" disabled={isSubmitting} className="w-full cursor-pointer">
+        <Button type="submit" disabled={isSubmitting} className="w-full cursor-pointer mt-4">
           {isSubmitting ? "Đang xử lý..." : label}
         </Button>
       )}

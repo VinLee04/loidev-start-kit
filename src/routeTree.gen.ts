@@ -10,7 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticationLoginRouteImport } from './routes/_authentication/login'
+import { Route as AuthenticationSignInRouteImport } from './routes/_authentication/sign-in'
+import { Route as AuthenticationSignUpRouteImport } from './routes/_authentication/sign-up'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +19,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticationLoginRoute = AuthenticationLoginRouteImport.update({
-  id: '/_authentication/login',
-  path: '/login',
+const AuthenticationSignInRoute = AuthenticationSignInRouteImport.update({
+  id: '/_authentication/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticationSignUpRoute = AuthenticationSignUpRouteImport.update({
+  id: '/_authentication/sign-up',
+  path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -31,31 +37,40 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof AuthenticationLoginRoute
+  '/sign-in': typeof AuthenticationSignInRoute
+  '/sign-up': typeof AuthenticationSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof AuthenticationLoginRoute
+  '/sign-in': typeof AuthenticationSignInRoute
+  '/sign-up': typeof AuthenticationSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authentication/login': typeof AuthenticationLoginRoute
+  '/_authentication/sign-in': typeof AuthenticationSignInRoute
+  '/_authentication/sign-up': typeof AuthenticationSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/api/auth/$'
+  fullPaths: '/' | '/sign-in' | '/sign-up' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/api/auth/$'
-  id: '__root__' | '/' | '/_authentication/login' | '/api/auth/$'
+  to: '/' | '/sign-in' | '/sign-up' | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authentication/sign-in'
+    | '/_authentication/sign-up'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticationLoginRoute: typeof AuthenticationLoginRoute
+  AuthenticationSignInRoute: typeof AuthenticationSignInRoute
+  AuthenticationSignUpRoute: typeof AuthenticationSignUpRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -68,11 +83,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authentication/login': {
-      id: '/_authentication/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthenticationLoginRouteImport
+    '/_authentication/sign-in': {
+      id: '/_authentication/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof AuthenticationSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authentication/sign-up': {
+      id: '/_authentication/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof AuthenticationSignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -87,7 +109,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticationLoginRoute: AuthenticationLoginRoute,
+  AuthenticationSignInRoute: AuthenticationSignInRoute,
+  AuthenticationSignUpRoute: AuthenticationSignUpRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
