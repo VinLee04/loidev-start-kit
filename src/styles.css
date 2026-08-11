@@ -194,7 +194,7 @@ body,
 body {
   margin: 0;
   color: var(--sea-ink);
-  font-family: var(--font-sans);
+  font-family: 'Manrope', sans-serif;
   background-color: var(--bg-base);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;

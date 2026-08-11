@@ -22,19 +22,8 @@ import { buttonVariants } from "../ui/button";
 import { useTheme, type Theme } from "../ui/theme-provider";
 
 const Header = () => {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const { theme, setTheme } = useTheme()
-
-
-  const logout = async () => {
-    await authClient.signOut({
-      // fetchOptions: {
-      //   onSuccess: () => {
-      //     navigate({ to: "/sign-in" });
-      //   },
-      // },
-    });
-  }
 
   return (
     <header className="fixed inset-x-0">
@@ -42,7 +31,7 @@ const Header = () => {
 
         <ZapIcon />
 
-        <nav className="space-x-2">
+        <nav className="space-x-2 uppercase text-sm">
           <Link to=".">Sản Phẩm</Link>
           <Link to=".">Trang Chủ</Link>
           <Link to=".">Giới Thiệu</Link>
@@ -109,16 +98,20 @@ const Header = () => {
                     <DropdownMenuSeparator />
 
                     <DropdownMenuGroup>
-                      <DropdownMenuItem variant="destructive" onClick={logout}>
+                      <DropdownMenuItem variant="destructive" onClick={() => void authClient.signOut(
+                        // fetchOptions: {
+                        //   onSuccess: () => {
+                        //     navigate({ to: "/sign-in" });
+                        //   },
+                        // },
+                      )}>
                         <LogOutIcon />
-                        Sign Out
+                        Đăng xuất
                         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
 
-
                   </DropdownMenuContent>
-
 
                 </DropdownMenu>
               </>
