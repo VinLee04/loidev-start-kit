@@ -1,8 +1,8 @@
-import { authClient } from "@/lib/auth-client"
-import { createFileRoute } from '@tanstack/react-router'
-import { getUsers } from '@/features/users'
 import Header from '#/components/layout/header.tsx';
-import { Button } from "#/components/ui/button.tsx";
+import { sessionQueryOptions } from '#/features/auth/server/session.ts';
+import { getUsers } from '@/features/users';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
   loader: async () => {
@@ -21,9 +21,8 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const navigate = Route.useNavigate();
-  
-  const { data: session, isPending } = authClient.useSession() ;
+
+  const { data: session } = useSuspenseQuery(sessionQueryOptions)
 
 
   return (

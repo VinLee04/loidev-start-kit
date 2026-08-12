@@ -1,6 +1,7 @@
 
 import { SignInFormFields, signInFormOpts } from '#/features/auth/form/sign-in.tsx';
 import { signInServerFn } from '#/features/auth/server/auth.ts';
+import { sessionQueryOptions } from '#/features/auth/server/session.ts';
 import { useAppForm, withForm } from '#/lib/form/form-hook.ts';
 import { getRouteApi } from '@tanstack/react-router';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ const Route = getRouteApi('/_authentication/sign-in');
 const SignInForm = () => {
   const navigate = Route.useNavigate();
   const { email } = Route.useSearch();
+  const { queryClient } = Route.useRouteContext();
 
   const signInForm = useAppForm({
     ...signInFormOpts,
@@ -39,6 +41,7 @@ const SignInForm = () => {
       try {
         await signInServerFn({ data: values.value })
         signInForm.reset();
+        await queryClient.invalidateQueries({ queryKey: sessionQueryOptions.queryKey })
         navigate({ from: '/sign-in', to: '/' })
         toast.success('Đăng nhập thành công!');
       } catch (error: any) {

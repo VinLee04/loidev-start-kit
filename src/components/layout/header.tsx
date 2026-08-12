@@ -20,10 +20,14 @@ import { Link } from "@tanstack/react-router";
 import { CalendarIcon, LogOutIcon, MonitorIcon, MoonIcon, PaletteIcon, SunIcon, UsersIcon, ZapIcon } from "lucide-react";
 import { buttonVariants } from "../ui/button";
 import { useTheme, type Theme } from "../ui/theme-provider";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { sessionQueryOptions } from "#/features/auth/server/session.ts";
+import { toast } from "sonner";
 
 const Header = () => {
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSuspenseQuery(sessionQueryOptions)
   const { theme, setTheme } = useTheme()
+  const queryClient = useQueryClient();
 
   return (
     <header className="fixed inset-x-0">
@@ -44,14 +48,14 @@ const Header = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger className="outline-none">
                     <Avatar className="rounded-md size-10">
-                      <AvatarImage src={session.user.image ?? ''} />
+                      <AvatarImage src={session.user.image ?? 'https://api.dicebear.com/10.x/planets/svg'} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel className="flex gap-x-4">
                       <Avatar className="rounded-md size-10">
-                        <AvatarImage src={session.user.image ?? ''} />
+                        <AvatarImage src={session.user.image ?? 'https://api.dicebear.com/10.x/planets/svg'} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                       <div>
@@ -60,7 +64,7 @@ const Header = () => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><UsersIcon className="text-inherit" />Thông tin cá nhân</DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to='/profile'><UsersIcon className="text-inherit" />Thông tin cá nhân</Link></DropdownMenuItem>
                     <DropdownMenuItem> <CalendarIcon className="text-inherit" /> Lịch sử mua hàng </DropdownMenuItem>
 
                     <DropdownMenuSub>
@@ -99,11 +103,14 @@ const Header = () => {
 
                     <DropdownMenuGroup>
                       <DropdownMenuItem variant="destructive" onClick={() => void authClient.signOut(
-                        // fetchOptions: {
-                        //   onSuccess: () => {
-                        //     navigate({ to: "/sign-in" });
-                        //   },
-                        // },
+                        {
+                          fetchOptions: {
+                            onSuccess: async () => {
+                              await queryClient.invalidateQueries({ queryKey: sessionQueryOptions.queryKey });
+                              toast.success('Đăng xuất thành công!');
+                            },
+                          },
+                        }
                       )}>
                         <LogOutIcon />
                         Đăng xuất
