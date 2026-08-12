@@ -26,6 +26,7 @@ export const auth = betterAuth({
 
 
     requireEmailVerification: true,
+    autoSignIn: false,
     customSyntheticUser: ({ coreFields, additionalFields, id }) => ({
       ...coreFields,
       // Admin plugin fields (in schema order)
