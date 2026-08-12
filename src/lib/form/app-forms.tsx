@@ -1,41 +1,71 @@
 // lib/form/app-forms.tsx
-import { useFieldContext, useFormContext } from "./form-context"
-import { useFieldStatus } from "./use-field-status"
-import { Textarea } from "@/components/ui/textarea.tsx"
-import { Switch } from "@/components/ui/switch.tsx"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button.tsx"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '#/components/ui/input-group.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field.tsx'
+import { Switch } from '@/components/ui/switch.tsx'
+import { Textarea } from '@/components/ui/textarea.tsx'
+import { EyeIcon, EyeOffIcon  } from 'lucide-react'
+import type {LucideIcon} from 'lucide-react';
+import { useState } from 'react'
+import { useFieldContext, useFormContext } from './form-context'
+import { useFieldStatus } from './use-field-status'
 
 export function TextField({
   label,
-  type = "text",
+  type = 'text',
   placeholder,
   autoFocus,
+  Icon,
 }: {
   label?: string
-  type?: "text" | "email" | "password"
+  type?: 'text' | 'email' | 'password'
   placeholder?: string
   autoFocus?: boolean
+  Icon?: LucideIcon
 }) {
   const field = useFieldContext<string>()
   const { isInvalid, fieldErrors } = useFieldStatus()
+  const [isHide, setIsHide] = useState(true)
 
   return (
     <Field data-invalid={isInvalid} className="gap-1.5">
       {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
-      <Input
-        autoComplete='off'
-        id={field.name}
-        name={field.name}
-        type={type}
-        placeholder={placeholder}
-        value={field.state.value}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-        aria-invalid={isInvalid}
-        autoFocus={autoFocus}
-      />
+      <InputGroup>
+        {Icon && (
+          <InputGroupAddon align="inline-start">
+            <Icon />
+          </InputGroupAddon>
+        )}
+        {type == 'password' && (
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setIsHide((prev) => !prev)}
+              tabIndex={-1}
+              className="rounded-md"
+            >
+              {isHide ? <EyeIcon /> : <EyeOffIcon />}
+            </InputGroupButton>
+          </InputGroupAddon>
+        )}
+        <InputGroupInput
+          autoComplete="off"
+          id={field.name}
+          name={field.name}
+          type={isHide ? type : 'text'}
+          placeholder={placeholder}
+          value={field.state.value}
+          onBlur={field.handleBlur}
+          onChange={(e) => field.handleChange(e.target.value)}
+          aria-invalid={isInvalid}
+          autoFocus={autoFocus}
+        />
+      </InputGroup>
       {isInvalid && <FieldError errors={fieldErrors} />}
     </Field>
   )
@@ -115,8 +145,12 @@ export function SubscribeButton({ label }: { label: string }) {
   return (
     <form.Subscribe selector={(s) => s.isSubmitting}>
       {(isSubmitting) => (
-        <Button type="submit" disabled={isSubmitting} className="w-full cursor-pointer mt-4">
-          {isSubmitting ? "Đang xử lý..." : label}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full cursor-pointer mt-4"
+        >
+          {isSubmitting ? 'Đang xử lý...' : label}
         </Button>
       )}
     </form.Subscribe>

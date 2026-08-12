@@ -1,7 +1,9 @@
-import { formOptions } from "@tanstack/react-form";
-import { signUpSchema, type SignUpFormValues } from "../schema";
-import { FieldGroup } from "#/components/ui/field.tsx";
-import { withForm } from "#/lib/form/form-hook.ts";
+import { formOptions } from '@tanstack/react-form'
+import { signUpSchema  } from '../schema'
+import type {SignUpFormValues} from '../schema';
+import { FieldGroup } from '#/components/ui/field.tsx'
+import { withForm } from '#/lib/form/form-hook.ts'
+import { MailIcon, ShieldCheckIcon, ShieldIcon, UserIcon } from 'lucide-react'
 
 const signUpFormDefaultValues: SignUpFormValues = {
   name: '',
@@ -9,7 +11,6 @@ const signUpFormDefaultValues: SignUpFormValues = {
   password: '',
   confirm: '',
 }
-
 
 export const signUpFormOpts = formOptions({
   defaultValues: signUpFormDefaultValues,
@@ -21,16 +22,44 @@ export const SignUpFormFields = withForm({
   render: ({ form }) => (
     <FieldGroup className="gap-2.5">
       <form.AppField name="name">
-        {(field) => <field.TextField label="Họ và tên" placeholder="Trần Vĩnh Lợi" autoFocus/>}
+        {(field) => (
+          <field.TextField
+            label="Họ và tên"
+            placeholder="Trần Vĩnh Lợi"
+            autoFocus
+            Icon={UserIcon}
+          />
+        )}
       </form.AppField>
       <form.AppField name="email">
-        {(field) => <field.TextField label="Email" type="email" placeholder="vinhloi@email.com" />}
+        {(field) => (
+          <field.TextField
+            label="Email"
+            type="email"
+            placeholder="vinhloi@email.com"
+            Icon={MailIcon}
+          />
+        )}
       </form.AppField>
       <form.AppField name="password">
-        {(field) => <field.TextField label="Mật khẩu" type="password" placeholder="••••••••" />}
+        {(field) => (
+          <field.TextField
+            label="Mật khẩu"
+            type="password"
+            placeholder="••••••••"
+            Icon={ShieldIcon}
+          />
+        )}
       </form.AppField>
       <form.AppField name="confirm">
-        {(field) => <field.TextField label="Xác nhận mật khẩu" type="password" placeholder="••••••••" />}
+        {(field) => (
+          <field.TextField
+            label="Xác nhận mật khẩu"
+            type="password"
+            placeholder="••••••••"
+            Icon={ShieldCheckIcon}
+          />
+        )}
       </form.AppField>
     </FieldGroup>
   ),
