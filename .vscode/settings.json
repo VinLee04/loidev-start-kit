@@ -17,5 +17,6 @@
     "ui",
     "deps",
     "config"
-  ]
+  ],
+  "cSpell.language": "en,vi"
 }
