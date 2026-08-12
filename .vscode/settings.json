@@ -7,5 +7,15 @@
   },
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
-  }
+  },
+  "conventionalCommits.scopes": [
+    "auth",
+    "profile",
+    "form",
+    "router",
+    "db",
+    "ui",
+    "deps",
+    "config"
+  ]
 }
