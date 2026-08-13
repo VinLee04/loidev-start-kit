@@ -18,5 +18,6 @@
     "deps",
     "config"
   ],
-  "cSpell.language": "en,vi"
+  "cSpell.language": "en,vi",
+  "todo-tree.tree.scanMode": "workspace only"
 }
