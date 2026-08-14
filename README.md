@@ -1,251 +1,238 @@
-Welcome to your new TanStack Start app!
+<div align="center">
 
-# Getting Started
+# TanStack Start Starter
 
-To run this application:
+A free, end-to-end TanStack Start starter - auth, database, forms, and UI already wired up, ready to clone and extend.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Built with TanStack Start](https://img.shields.io/badge/Built%20with-TanStack%20Start-FF4154?logo=tanstack&logoColor=white)](https://tanstack.com/start)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://tanstack-start-starter-pied.vercel.app)
+
+**[Live Demo](https://tanstack-start-starter-pied.vercel.app)**
+
+</div>
+
+---
+
+## 📖 About
+
+This is a starter project built with **TanStack Start**, meant to be cloned and adapted for your own projects. Every piece of the stack - from local development to production deployment - runs entirely on **free tiers**, no paid service required.
+
+> **Note:** Field names and code comments are written in Vietnamese for now. An i18n setup is planned for later.
+
+## ✨ Current Features
+
+- ✅ Email sign up - automatically signed in right after registration
+- ✅ Email sign in - email verification is not yet mandatory
+- ✅ Profile page displaying account information
+- ✅ Auto-generated avatar on sign up (via [DiceBear](https://www.dicebear.com/))
+- ✅ Responsive header - shows **Sign in / Sign up** buttons when logged out, and an avatar dropdown (Profile / Sign out) when logged in
+- ✅ Light / Dark / System theme switch
+- ✅ Route protection for authenticated pages
+- ✅ Session caching synced between server and client via TanStack Query
+
+### Pages
+
+| Route       | Description              |
+| ----------- | -------------------------|
+| `/`         | Home page                |
+| `/sign-in`  | Sign in                  |
+| `/sign-up`  | Sign up                  |
+| `/profile`  | User profile (protected) |
+
+## 🧱 Tech Stack
+
+| Category | Tools |
+| --- | --- |
+| **Framework** | [TanStack Start](https://tanstack.com/start) |
+| **Routing / Data Fetching** | [TanStack Router](https://tanstack.com/router) + [TanStack Query](https://tanstack.com/query) |
+| **Forms** | [TanStack Form](https://tanstack.com/form) + [Zod](https://zod.dev/) |
+| **Tables** | [TanStack Table](https://tanstack.com/table) *(not used yet)* |
+| **UI** | [shadcn/ui](https://ui.shadcn.com/) + [Tailwind CSS](https://tailwindcss.com/) |
+| **Database ORM** | [Drizzle ORM](https://orm.drizzle.team/) |
+| **Database** | [PostgreSQL](https://www.postgresql.org/) on [Neon](https://neon.tech/) |
+| **Authentication** | [Better Auth](https://www.better-auth.com/) |
+| **Linting / Formatting** | ESLint, Prettier |
+| **Git Hooks** | Husky + commitlint + lint-staged |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) 20+
+- A free [Neon](https://neon.tech/) PostgreSQL database
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/VinLee04/tanstack-start-starter.git
+cd tanstack-start-starter
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
+```
+
+### 3. Set up environment variables
+
+Copy the example file and fill in the values:
+
+```bash
+cp .env.example .env
+```
+
+See the [Environment Variables](#-environment-variables) section below for how to obtain each value.
+
+### 4. Push the database schema
+
+```bash
+npm run db:push
+```
+
+This syncs the schema defined in `src/db/schema/` directly to your Neon database - the fastest way to get started. See [Database](#️-database) below for details on the migration workflow.
+
+### 5. Run the dev server
+
+```bash
 npm run dev
 ```
 
-# Building For Production
+The app will be running at [http://localhost:3000](http://localhost:3000).
 
-To build this application for production:
+---
+
+## 🔑 Environment Variables
+
+Make user you copied `.env.example` to `.env`, [open it](.env) and fill in the following:
+
+| Variable | Description | How to get it |
+| --- | --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string | Go to [neon.new](https://neon.new/) → create a free project → **Connect** → copy the connection string shown there |
+| `BETTER_AUTH_URL` | Base URL of your app | `http://localhost:3000` for local dev; your deployed domain in production |
+| `BETTER_AUTH_SECRET` | Secret key used to sign sessions | Run `npx -y @better-auth/cli secret` and paste the generated value |
+
+> Never commit your `.env` file. Only `.env.example` (with placeholder values) should be tracked by Git.
+
+---
+
+## 🗄️ Database
+
+This project uses **Drizzle ORM** with schema files under `src/db/schema/`.
+
+### Quick sync (development)
+
+Push the current schema straight to your database - no migration files generated:
 
 ```bash
-npm run build
+npm run db:push
 ```
 
-## Styling
+### Adding a Better Auth plugin
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
-
-## Linting & Formatting
-
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+When you enable a new [Better Auth plugin](https://www.better-auth.com/docs/plugins) (e.g. `captcha`, `passkey`, `emailOTP`, `twoFactor`,...), regenerate the auth schema file, then sync it to the database:
 
 ```bash
-npm run lint
-npm run format
-npm run check
+# 1. Regenerate the schema based on your Better Auth config
+npx auth@latest generate --output src/db/schema/auth.ts
+
+# 2. Push the updated schema to your database
+npm run db:push
 ```
 
+### Modifying schema files manually
 
-## Deploy with Nitro
+If you edit any file inside `src/db/schema/` by hand (adding a column, a new table, a relation...), sync the change the same way:
 
-This project uses Nitro as a generic server adapter, so it can run on any Node-compatible host.
+```bash
+npm run db:push
+```
+
+### Other useful commands
+
+| Command | Description |
+| --- | --- |
+| `npm run db:generate` | Generate SQL migration files from schema changes |
+| `npm run db:migrate` | Apply generated migration files to the database |
+| `npm run db:pull` | Introspect the database and generate a schema from it |
+| `npm run db:studio` | Open [Drizzle Studio](https://orm.drizzle.team/drizzle-studio/overview) to browse your data |
+
+---
+
+## 📦 Working with shadcn/ui
+
+Add new components using the shadcn CLI:
+
+```bash
+npx shadcn@latest add button
+```
+
+Browse all available components at [ui.shadcn.com](https://ui.shadcn.com/).
+
+💡 Install the [shadcn/ui](https://marketplace.visualstudio.com/items?itemName=SuhelMakkad.shadcn-ui) and [shadcn/ui snippets](https://marketplace.visualstudio.com/items?itemName=VeroXyle.shadcn-ui-snippets)  VS Code extensions to get code suggestions and write shadcn code faster.
+
+---
+
+## 🌐 Deployment
+
+The demo above is deployed on **[Vercel](https://vercel.com/)**, completely free.
+
+To deploy your own copy:
+
+1. Push your repository to GitHub.
+2. Import it on [Vercel](https://vercel.com/new).
+3. Add the same environment variables listed [above](#-environment-variables) in your Vercel project settings.
+4. Deploy - see the official [Vercel × TanStack Start guide](https://vercel.com/docs/frameworks/full-stack/tanstack-start) for details.
+
+This project uses **Nitro** as a generic server adapter, so it isn't locked to Vercel - it can run on any Node-compatible host (Render, Fly.io, a VPS...):
 
 ```bash
 npm run build
 node dist/server/index.mjs
 ```
 
-The build output is a self-contained Node server. To deploy, push the `dist/` directory to your host (Render, Fly.io, your own VPS, etc.) and run the server command above.
+For other host-specific presets (Netlify, Cloudflare, AWS Lambda, etc.), see the [Nitro deployment docs](https://v3.nitro.build/deploy).
 
-For host-specific presets (Vercel, Netlify, Cloudflare, AWS Lambda, etc.) and tuning, see https://v3.nitro.build/deploy.
+---
 
+## 📝 Commit Convention
 
-## Shadcn
+This project follows [Conventional Commits](https://www.conventionalcommits.org/), enforced automatically via **Husky + commitlint + lint-staged**.
 
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpm dlx shadcn@latest add button
+```text
+<type>(<scope>): <description>
 ```
 
+Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`.
 
-## Setting up Better Auth
+Custom scopes are defined in [`.vscode/settings.json`](./.vscode/settings.json):
 
-1. Generate and set the `BETTER_AUTH_SECRET` environment variable in your `.env.local`:
-
-   ```bash
-   npx -y @better-auth/cli secret
-   ```
-
-2. Visit the [Better Auth documentation](https://www.better-auth.com) to unlock the full potential of authentication in your app.
-
-### Adding a Database (Optional)
-
-Better Auth can work in stateless mode, but to persist user data, add a database:
-
-```typescript
-// src/lib/auth.ts
-import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-
-export const auth = betterAuth({
-  database: new Pool({
-    connectionString: process.env.DATABASE_URL,
-  }),
-  // ... rest of config
-});
+```json
+"conventionalCommits.scopes": ["auth", "profile", "form", "..."]
 ```
 
-Then run migrations:
+💡 Install the [Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) VS Code extension for a guided commit message prompt.
 
-```bash
-npx -y @better-auth/cli migrate
-```
+---
 
+## 📚 Learn More
 
+This README intentionally doesn't repeat framework basics (routing, server functions, data loading...) - the official docs are kept up to date and are the best source of truth:
 
-## Routing
+- [TanStack Start Documentation](https://tanstack.com/start)
+- [TanStack Router Documentation](https://tanstack.com/router)
+- [TanStack Query Documentation](https://tanstack.com/query)
+- [TanStack Form Documentation](https://tanstack.com/form)
+- [Drizzle ORM Documentation](https://orm.drizzle.team/)
+- [Better Auth Documentation](https://www.better-auth.com/)
+- [Neon Documentation](https://neon.tech/docs)
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+---
 
-### Adding A Route
+## 📄 License
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+This project is licensed under the [MIT License](./LICENSE).
