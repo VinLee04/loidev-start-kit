@@ -16,7 +16,8 @@
     "db",
     "ui",
     "deps",
-    "config"
+    "config",
+    "email"
   ],
   "cSpell.language": "en,vi",
   "todo-tree.tree.scanMode": "workspace only"

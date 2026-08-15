@@ -31,6 +31,7 @@ This is a starter project built with **TanStack Start**, meant to be cloned and 
 - ✅ Light / Dark / System theme switch
 - ✅ Route protection for authenticated pages
 - ✅ Session caching synced between server and client via TanStack Query
+- ✅ Basic send email with Resend
 
 ### Pages
 
@@ -55,8 +56,7 @@ This is a starter project built with **TanStack Start**, meant to be cloned and 
 | **Authentication** | [Better Auth](https://www.better-auth.com/) |
 | **Linting / Formatting** | ESLint, Prettier |
 | **Git Hooks** | Husky + commitlint + lint-staged |
-
----
+| **Send Email** | [Resend](https://resend.com/emails) |
 
 ## 🚀 Getting Started
 
@@ -115,8 +115,17 @@ Make user you copied `.env.example` to `.env`, [open it](.env) and fill in the f
 | `DATABASE_URL` | PostgreSQL connection string | Go to [neon.new](https://neon.new/) → create a free project → **Connect** → copy the connection string shown there |
 | `BETTER_AUTH_URL` | Base URL of your app | `http://localhost:3000` for local dev; your deployed domain in production |
 | `BETTER_AUTH_SECRET` | Secret key used to sign sessions | Run `npx -y @better-auth/cli secret` and paste the generated value |
+| `RESEND_API_KEY` | Sending emails | Optional, if left blank, the app still runs but emails won't be sent (a warning is logged) |
+| `EMAIL_FROM` | Sender name/address shown in emails | Optional, defaults to Resend's test address if left blank |
 
-> Never commit your `.env` file. Only `.env.example` (with placeholder values) should be tracked by Git.
+> Never commit your `.env` file. Only `.env.example` (with placeholder values) should be tracked by Git. -->
+
+---
+
+> **⚠️ Resend sandbox limitation:** Without a verified custom domain,
+> `onboarding@resend.dev` can only send emails to the address you used to
+> sign up for Resend, sending to any other address will fail with a 403
+> error. To send to any recipient, [verify your own domain](https://resend.com/docs/dashboard/domains/introduction).
 
 ---
 
