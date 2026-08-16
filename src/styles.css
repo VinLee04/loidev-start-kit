@@ -217,9 +217,7 @@ body,
 
 body {
   margin: 0;
-  color: var(--sea-ink);
   font-family: 'Manrope', sans-serif;
-  background-color: var(--bg-base);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
