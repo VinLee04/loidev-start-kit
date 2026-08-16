@@ -21,7 +21,7 @@ export const SignUpFormComponent = withForm({
       <SignUpFormFields form={form} />
 
       <form.AppForm>
-        <form.SubscribeButton label="Tạo tài khoản" />
+        <form.SubscribeButton label="Create Account" />
       </form.AppForm>
     </form>
   ),

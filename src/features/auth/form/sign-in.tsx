@@ -2,8 +2,8 @@ import { FieldGroup } from '#/components/ui/field.tsx'
 import { withForm } from '#/lib/form/form-hook.ts'
 import { formOptions } from '@tanstack/react-form'
 import { MailIcon, ShieldIcon } from 'lucide-react'
-import { signInSchema  } from '../schema'
-import type {SignInFormValues} from '../schema';
+import { signInSchema } from '../schema'
+import type { SignInFormValues } from '../schema'
 
 const signInFormDefaultValues: SignInFormValues = {
   email: '',
@@ -37,7 +37,7 @@ export const SignInFormFields = withForm({
       <form.AppField name="password">
         {(field: any) => (
           <field.TextField
-            label="Mật khẩu"
+            label="Password"
             type="password"
             placeholder="••••••••"
             Icon={ShieldIcon}
@@ -46,7 +46,7 @@ export const SignInFormFields = withForm({
         )}
       </form.AppField>
       <form.AppField name="rememberMe">
-        {(field: any) => <field.SwitchField label="Ghi nhớ mật khẩu" />}
+        {(field: any) => <field.SwitchField label="Remember Me" />}
       </form.AppField>
     </FieldGroup>
   ),

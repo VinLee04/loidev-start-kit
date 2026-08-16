@@ -1,39 +1,32 @@
-import Header from '#/components/layout/header.tsx';
-import { sessionQueryOptions } from '#/features/auth/server/session.ts';
-import { getUsers } from '@/features/users';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import TanstackStartStarterGithubRepo from '#/components/github-repo.tsx'
+import Header from '#/components/layout/header.tsx'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
   loader: async () => {
-    const users = await getUsers();
-    return users
+    try {
+      const res = await fetch(
+        'https://api.github.com/repos/VinLee04/tanstack-start-starter',
+      )
+      if (!res.ok) throw new Error('Failed to fetch repo data')
+      const data = await res.json()
+      return {
+        stars: data.stargazers_count as number,
+        updatedAt: data.pushed_at as string,
+      }
+    } catch {
+      return { stars: null, updatedAt: null }
+    }
   },
   component: Home,
-  errorComponent: (e) => {
-    console.log(e)
-    return (
-      <div>
-        {JSON.stringify(e, null, 2)}
-      </div>
-    )
-  }
 })
 
 function Home() {
-
-  const { data: session } = useSuspenseQuery(sessionQueryOptions)
-
-
   return (
     <>
       <Header />
-      <div className="p-8 pt-24">
-        {JSON.stringify(session, null, 2)}
-        <h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
-        <p className="mt-4 text-lg">
-          Edit <code>src/routes/index.tsx</code> to get started.
-        </p>
+      <div className="pt-24">
+        <TanstackStartStarterGithubRepo />
       </div>
     </>
   )

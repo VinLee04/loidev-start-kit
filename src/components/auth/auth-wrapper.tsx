@@ -5,7 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
+import { Link } from '@tanstack/react-router'
 import React from 'react'
 
 type AuthWrapperProps = {
@@ -19,21 +20,19 @@ const AuthWrapper = ({
   title = 'Title',
   description = 'Description',
   footer = 'Footer',
-  children
+  children,
 }: AuthWrapperProps) => {
   return (
     <div className="flex min-h-screen items-center justify-center ">
       <Card className="w-full max-w-md shadow-none border-0">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>
+            <Link to="/">{title}</Link>
+          </CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent>
-          {children}
-        </CardContent>
-        <CardFooter>
-          {footer}
-        </CardFooter>
+        <CardContent>{children}</CardContent>
+        <CardFooter>{footer}</CardFooter>
       </Card>
     </div>
   )

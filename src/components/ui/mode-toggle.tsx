@@ -1,13 +1,13 @@
-import { CheckIcon, Moon, Sun } from "lucide-react"
+import { CheckIcon, Moon, Sun } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useTheme } from "@/components/ui/theme-provider"
+} from '@/components/ui/dropdown-menu'
+import { useTheme } from '@/components/ui/theme-provider'
 
 export function ModeToggle() {
   const { theme, setTheme } = useTheme()
@@ -22,16 +22,16 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Sáng
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          Light
           {theme === 'light' && <CheckIcon className="ml-auto text-inherit" />}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Tối
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          Dark
           {theme === 'dark' && <CheckIcon className="ml-auto text-inherit" />}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          Hệ thống
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          System
           {theme === 'system' && <CheckIcon className="ml-auto text-inherit" />}
         </DropdownMenuItem>
       </DropdownMenuContent>

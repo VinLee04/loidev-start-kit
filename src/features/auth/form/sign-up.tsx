@@ -1,6 +1,6 @@
 import { formOptions } from '@tanstack/react-form'
-import { signUpSchema  } from '../schema'
-import type {SignUpFormValues} from '../schema';
+import { signUpSchema } from '../schema'
+import type { SignUpFormValues } from '../schema'
 import { FieldGroup } from '#/components/ui/field.tsx'
 import { withForm } from '#/lib/form/form-hook.ts'
 import { MailIcon, ShieldCheckIcon, ShieldIcon, UserIcon } from 'lucide-react'
@@ -24,7 +24,7 @@ export const SignUpFormFields = withForm({
       <form.AppField name="name">
         {(field) => (
           <field.TextField
-            label="Họ và tên"
+            label="Fullname"
             placeholder="Trần Vĩnh Lợi"
             autoFocus
             Icon={UserIcon}
@@ -44,7 +44,7 @@ export const SignUpFormFields = withForm({
       <form.AppField name="password">
         {(field) => (
           <field.TextField
-            label="Mật khẩu"
+            label="Password"
             type="password"
             placeholder="••••••••"
             Icon={ShieldIcon}
@@ -54,7 +54,7 @@ export const SignUpFormFields = withForm({
       <form.AppField name="confirm">
         {(field) => (
           <field.TextField
-            label="Xác nhận mật khẩu"
+            label="Confirm Password"
             type="password"
             placeholder="••••••••"
             Icon={ShieldCheckIcon}

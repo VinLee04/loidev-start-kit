@@ -43,7 +43,7 @@ function RouteComponent() {
             queryKey: sessionQueryOptions.queryKey,
           })
           navigate({ to: '/' })
-          toast.success('Đăng xuất thành công!')
+          toast.success('Signed out successfully!')
         },
       },
     })
@@ -54,7 +54,7 @@ function RouteComponent() {
         <div className="md:absolute top-0 left-0 md:-translate-y-1/2 flex justify-between">
           <div className="flex gap-x-2">
             <Link to=".." className={buttonVariants()}>
-              Quay lại trang chủ
+              Back to Home
             </Link>
             <ModeToggle />
           </div>
@@ -62,20 +62,20 @@ function RouteComponent() {
           <div className="flex md:hidden gap-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary">Tính năng</Button>
+                <Button variant="secondary">Features</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>Đổi mật khẩu</DropdownMenuItem>
-                <DropdownMenuItem>Quên mật khẩu</DropdownMenuItem>
+                <DropdownMenuItem>Change Password</DropdownMenuItem>
+                <DropdownMenuItem>Forgot Password</DropdownMenuItem>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem variant="destructive" disabled>
-                  Xóa tài khoản
+                  Delete Account
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive" onClick={onSignOut}>
-                  Đăng xuất
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -84,13 +84,13 @@ function RouteComponent() {
 
         <div className="md:flex hidden absolute bottom-0 left-0 w-full translate-y-1/2 gap-x-2">
           <Button variant="destructive" className="mr-auto" disabled>
-            Xóa tài khoản
+            Delete Account
           </Button>
 
-          <Button variant="secondary">Đổi mật khẩu</Button>
-          <Button variant="secondary">Quên mật khẩu</Button>
+          <Button variant="secondary">Change Password</Button>
+          <Button variant="secondary">Forgot Password</Button>
           <Button variant="default" onClick={onSignOut}>
-            Đăng xuất
+            Sign Out
           </Button>
         </div>
 
@@ -109,12 +109,12 @@ function RouteComponent() {
               {user.emailVerified ? (
                 <>
                   {' '}
-                  <ShieldCheckIcon /> Đã xác thực{' '}
+                  <ShieldCheckIcon /> Verified{' '}
                 </>
               ) : (
                 <>
                   {' '}
-                  <ShieldBanIcon /> Chưa xác thực{' '}
+                  <ShieldBanIcon /> Not Verified{' '}
                 </>
               )}
             </Badge>
@@ -133,12 +133,12 @@ function RouteComponent() {
                 {isAdmin ? (
                   <>
                     {' '}
-                    <SpadeIcon /> Quản lý{' '}
+                    <SpadeIcon /> Admin{' '}
                   </>
                 ) : (
                   <>
                     {' '}
-                    <CarrotIcon /> Khách hàng{' '}
+                    <CarrotIcon /> User{' '}
                   </>
                 )}
               </Badge>
@@ -146,50 +146,16 @@ function RouteComponent() {
 
             <div className="flex gap-x-6 gap-y-2 flex-col md:flex-row mt-auto md:text-center text-sm">
               <div>
-                <p>Ngày tạo tài khoản</p>
+                <p>Account Created</p>
                 {format(new Date(user.createdAt), 'dd/MM/yyyy HH:mm:ss')}
               </div>
 
               <div>
-                <p>Lần cuối chỉnh sửa</p>
+                <p>Last Modified</p>
                 {format(new Date(user.updatedAt), 'dd/MM/yyyy HH:mm:ss')}
               </div>
             </div>
           </div>
-        </div>
-
-        {/* FIX: Tạm để cho đẹp, sau này sẽ thay đúng tính năng phù hợp */}
-        <div
-          className="flex-1 bg-muted rounded-md mt-7 p-4 grid grid-cols-2 md:grid-cols-3 gap-4 
-        *:flex-col *:h-auto *:w-full *:text-base *:rounded-lg *:py-2.5
-         [&>span]:text-sm [&>span>p]:font-semibold
-         "
-        >
-          <Badge variant="default">
-            Đơn hàng
-            <p> 2 </p>
-          </Badge>
-          <Badge variant="warning">
-            Đang giao
-            <p> 0 </p>
-          </Badge>
-          <Badge variant="destructive">
-            Đã hủy
-            <p> 0 </p>
-          </Badge>
-          <Badge variant="success">
-            {' '}
-            Tổng tiền
-            <p> 250.000 VNĐ </p>
-          </Badge>
-          <Badge variant="invert">
-            Tiết kiệm
-            <p> 50.000 VNĐ </p>
-          </Badge>
-          <Badge variant="info">
-            Đã chi
-            <p> 200.000 VNĐ </p>
-          </Badge>
         </div>
       </div>
     </div>

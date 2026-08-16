@@ -7,7 +7,7 @@ import z from 'zod'
 
 const SignInParams = z.object({
   status: z.enum(['signup']).optional().catch(undefined),
-  email: z.email().optional(),
+  email: z.string().optional(),
 })
 
 export const Route = createFileRoute('/_authentication/sign-in')({
@@ -24,8 +24,8 @@ function RouteComponent() {
     if (status === 'signup' && !hasShownToast.current) {
       hasShownToast.current = true
       // TODO: Sau khi đăng ký thì in thông báo yêu cầu xác thực email đồng thời gửi mail cho người dùng để xác thực
-      toast.success('Đăng ký thành công', {
-        description: 'Bạn được tự động đăng nhập',
+      toast.success('Sign up successful', {
+        description: 'Automatically logged in',
       })
 
       navigate({ to: '/' })
@@ -36,29 +36,30 @@ function RouteComponent() {
   }, [status])
 
   return (
-    <AuthWrapper
-      title="Chào mừng bạn quay lại"
-      description="Vui lòng điền thông tin để đăng nhập tài khoản"
-      footer={
-        <div className="text-sm  text-center space-y-3">
-          <p>
-            Chưa có tài khoản?{' '}
-            <Link to="/sign-up" className="text-primary hover:underline">
-              Đăng ký
-            </Link>
-          </p>
-
-          <p className="italic text-muted-foreground">
-            Chúng tôi đảm bảo an toàn cho thông tin cá nhân của bạn dựa trên các
-            tiêu chuẩn bảo mật hiện hành.
-          </p>
-        </div>
-      }
-    >
-      <SignInForm />
-      {/* TODO: Xác thực email */}
-      {/* TODO: Tính năng Quên mật khẩu */}
-      {/* TODO: Phương thức đăng nhập bằng mxh */}
-    </AuthWrapper>
+    <>
+      <AuthWrapper
+        title="Welcome back"
+        description="Please fill in your information to sign in"
+        footer={
+          <div className="text-sm  text-center space-y-3">
+            <p>
+              Don't have an account?{' '}
+              <Link to="/sign-up" className="text-primary hover:underline">
+                Sign Up
+              </Link>
+            </p>
+            <p className="italic text-muted-foreground">
+              We keep your personal information safe using current security
+              standards.
+            </p>
+          </div>
+        }
+      >
+        <SignInForm />
+        {/* TODO: Xác thực email */}
+        {/* TODO: Tính năng Quên mật khẩu */}
+        {/* TODO: Phương thức đăng nhập bằng mxh */}
+      </AuthWrapper>
+    </>
   )
 }

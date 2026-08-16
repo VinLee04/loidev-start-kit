@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button.tsx'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field.tsx'
 import { Switch } from '@/components/ui/switch.tsx'
 import { Textarea } from '@/components/ui/textarea.tsx'
-import { EyeIcon, EyeOffIcon  } from 'lucide-react'
-import type {LucideIcon} from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useFieldContext, useFormContext } from './form-context'
 import { useFieldStatus } from './use-field-status'
+import { Spinner } from '#/components/ui/spinner.tsx'
 
 export function TextField({
   label,
@@ -150,7 +151,13 @@ export function SubscribeButton({ label }: { label: string }) {
           disabled={isSubmitting}
           className="w-full cursor-pointer mt-4"
         >
-          {isSubmitting ? 'Đang xử lý...' : label}
+          {isSubmitting ? (
+            <>
+              <Spinner className="mr-2" /> Loading...
+            </>
+          ) : (
+            label
+          )}
         </Button>
       )}
     </form.Subscribe>
