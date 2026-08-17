@@ -16,7 +16,7 @@ export type SignInStatus = (typeof SignInStatus)[number]
 const SignInParams = z.object({
   status: z.enum(SignInStatus).optional().catch(undefined),
   email: z.string().optional(),
-  otp: z.string().optional(),
+  otp: z.coerce.string().optional().catch(undefined),
 })
 
 export const Route = createFileRoute('/_authentication/sign-in')({
