@@ -55,12 +55,10 @@ export const auth = betterAuth({
             where: eq(user.email, email),
           })
           await sendEmail({
-            data: {
-              type: 'email-verification',
-              to: email,
-              name: currentUser?.name ?? 'there',
-              otp,
-            },
+            type: 'email-verification',
+            to: email,
+            name: currentUser?.name ?? 'there',
+            otp,
           })
         } else if (type === 'sign-in') {
           // Send the OTP for sign in
