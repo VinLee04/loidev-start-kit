@@ -1,6 +1,11 @@
 import { auth } from '#/lib/auth.ts'
 import { createServerFn } from '@tanstack/react-start'
-import { signInSchema, signUpSchema, verifyEmailSchema } from '../schema'
+import {
+  checkEmailVerifiedSchema,
+  signInSchema,
+  signUpSchema,
+  verifyEmailSchema,
+} from '../schema'
 import { db } from '#/db/index.ts'
 import { user } from '#/db/schema/auth.ts'
 import { eq } from 'drizzle-orm'
@@ -55,4 +60,17 @@ export const verifyEmailServerFn = createServerFn({ method: 'POST' })
     await auth.api.verifyEmailOTP({
       body: { ...data },
     })
+  })
+
+export const checkEmailVerifiedServerFn = createServerFn({ method: 'GET' })
+  .validator(checkEmailVerifiedSchema)
+  .handler(async ({ data }) => {
+    const existingUser = await db.query.user.findFirst({
+      where: eq(user.email, data.email),
+      columns: { emailVerified: true },
+    })
+    return {
+      exists: !!existingUser,
+      verified: existingUser?.emailVerified ?? false,
+    }
   })

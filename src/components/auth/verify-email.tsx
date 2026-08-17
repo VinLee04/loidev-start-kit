@@ -32,6 +32,7 @@ import { useIsMobile } from '#/hooks/use-is-mobile'
 import { isValidEmail } from '#/utils/is-valid-email'
 import { authClient } from '#/lib/auth-client'
 import { getRouteApi } from '@tanstack/react-router'
+import { checkEmailVerifiedServerFn } from '#/features/auth/server/auth.ts'
 
 const Route = getRouteApi('/_authentication/sign-in')
 
@@ -45,10 +46,13 @@ type PopupProps = {
 
 const VerifyEmailFormContent = ({
   onVerify,
+  onClose,
 }: {
   onVerify: PopupProps['onVerify']
+  onClose: () => void
 }) => {
   const { email: emailFromUrl } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   const [emailValue, setEmailValue] = useState(emailFromUrl ?? '')
   const [otpValue, setOtpValue] = useState('')
@@ -61,6 +65,25 @@ const VerifyEmailFormContent = ({
   const resentOTP = async (targetEmail: string) => {
     setResending(true)
     try {
+      const { exists, verified } = await checkEmailVerifiedServerFn({
+        data: { email: targetEmail },
+      })
+
+      if (!exists) {
+        toast.error('No account found with this email')
+        return
+      }
+      if (verified) {
+        toast.info('This email is already verified. You can sign in now.')
+        navigate({
+          to: '.',
+          search: (prev) => ({ ...prev, email: targetEmail }),
+          replace: true,
+        })
+        onClose()
+        return
+      }
+
       await authClient.emailOtp.sendVerificationOtp({
         email: targetEmail,
         type: 'email-verification',
@@ -68,7 +91,6 @@ const VerifyEmailFormContent = ({
       toast.success(`An OTP has been sent to: ${targetEmail}`)
     } catch (error: any) {
       toast.error(error?.message ?? 'Failed to resend OTP')
-      return
     } finally {
       setResending(false)
     }
@@ -147,7 +169,10 @@ const DesktopDialog = ({ open, setOpen, onVerify }: PopupProps) => (
           Enter your email and the OTP code sent to it to verify your account
         </DialogDescription>
       </DialogHeader>
-      <VerifyEmailFormContent onVerify={onVerify} />
+      <VerifyEmailFormContent
+        onVerify={onVerify}
+        onClose={() => setOpen(false)}
+      />
     </DialogContent>
   </Dialog>
 )
@@ -162,7 +187,10 @@ const MobileDrawer = ({ open, setOpen, onVerify }: PopupProps) => (
         </DrawerDescription>
       </DrawerHeader>
       <div className="px-2 pb-8 space-y-4">
-        <VerifyEmailFormContent onVerify={onVerify} />
+        <VerifyEmailFormContent
+          onVerify={onVerify}
+          onClose={() => setOpen(false)}
+        />
       </div>
     </DrawerContent>
   </Drawer>

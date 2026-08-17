@@ -37,3 +37,8 @@ export const verifyEmailSchema = z.object({
 })
 
 export type verificationEmailFormValues = z.infer<typeof verifyEmailSchema>
+
+// Schema cho chức năng kiểm tra email đã xác thực chưa
+export const checkEmailVerifiedSchema = z.object({
+  email: z.email(),
+})

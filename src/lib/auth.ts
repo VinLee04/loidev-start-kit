@@ -54,6 +54,10 @@ export const auth = betterAuth({
           const currentUser = await db.query.user.findFirst({
             where: eq(user.email, email),
           })
+
+          // Đã verified rồi thì không gửi nữa, dù request tới từ đâu
+          if (currentUser?.emailVerified) return
+
           await sendEmail({
             type: 'email-verification',
             to: email,
