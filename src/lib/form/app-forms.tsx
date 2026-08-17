@@ -12,17 +12,19 @@ import { Switch } from '@/components/ui/switch.tsx'
 import { Textarea } from '@/components/ui/textarea.tsx'
 import type { LucideIcon } from 'lucide-react'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useFieldContext, useFormContext } from './form-context'
 import { useFieldStatus } from './use-field-status'
 
 export function TextField({
+  ref,
   label,
   type = 'text',
   placeholder,
   autoFocus,
   Icon,
 }: {
+  ref?: React.Ref<HTMLInputElement>
   label?: string
   type?: 'text' | 'email' | 'password'
   placeholder?: string
@@ -55,6 +57,7 @@ export function TextField({
           </InputGroupAddon>
         )}
         <InputGroupInput
+          ref={ref}
           autoComplete="off"
           id={field.name}
           name={field.name}

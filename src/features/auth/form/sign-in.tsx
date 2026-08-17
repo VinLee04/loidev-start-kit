@@ -20,8 +20,10 @@ export const SignInFormFields = withForm({
   ...signInFormOpts,
   props: {
     focusField: 'email' as 'email' | 'password',
+    passwordRef: undefined as
+      React.RefObject<HTMLInputElement | null> | undefined,
   },
-  render: ({ form, focusField }) => (
+  render: ({ form, focusField, passwordRef }) => (
     <FieldGroup className="gap-2.5">
       <form.AppField name="email">
         {(field: any) => (
@@ -42,6 +44,7 @@ export const SignInFormFields = withForm({
             placeholder="••••••••"
             Icon={ShieldIcon}
             autoFocus={focusField === 'password'}
+            ref={passwordRef}
           />
         )}
       </form.AppField>
