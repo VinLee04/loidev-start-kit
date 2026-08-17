@@ -1,12 +1,20 @@
 import AuthWrapper from '#/components/auth/auth-wrapper.tsx'
 import SignInForm from '#/components/auth/form/sign-in.tsx'
 import VerifyEmailPopup from '#/components/auth/verify-email.tsx'
+import { Spinner } from '#/components/ui/spinner.tsx'
 import type { verificationEmailFormValues } from '#/features/auth/schema.tsx'
 import { verifyEmailServerFn } from '#/features/auth/server/auth.ts'
 import { Button } from '@/components/ui/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { RotateCwIcon, Shield } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import {
+  CheckIcon,
+  CircleAlertIcon,
+  CircleCheckIcon,
+  FlameIcon,
+  RotateCwIcon,
+  Shield,
+} from 'lucide-react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import z from 'zod'
 
@@ -29,6 +37,37 @@ function RouteComponent() {
   const navigate = Route.useNavigate()
   const hasShownToast = useRef(false)
   const [displayVerifyEmailForm, setDisplayVerifyEmailForm] = useState(false)
+  const [isVerifying, startVerify] = useTransition()
+
+  const performVerify = async (data: verificationEmailFormValues) => {
+    const toastId = toast.info('Verifying your email...', {
+      icon: <Spinner />,
+      duration: Infinity, // giữ toast cho tới khi mình tự đóng
+    })
+
+    startVerify(() => {
+      verifyEmailServerFn({ data })
+        .then(() => {
+          setDisplayVerifyEmailForm(false)
+          toast.success('Account successfully verified, please log in again!', {
+            id: toastId,
+            icon: <CircleCheckIcon className="size-4" />,
+            duration: 4000,
+          })
+        })
+        .catch((error: any) => {
+          toast.error(
+            error?.message ??
+              'Verification failed, the code may be invalid or expired',
+            {
+              id: toastId,
+              icon: <CircleAlertIcon className="size-4" />,
+              duration: 4000,
+            },
+          )
+        })
+    })
+  }
 
   useEffect(() => {
     if (hasShownToast.current) return
@@ -44,29 +83,14 @@ function RouteComponent() {
     }
 
     if (status === 'auto-verify' && email && otp) {
-      // Không mở dialog, verify ngầm rồi báo kết quả qua toast
-      onVerifyEmail({ email, otp }).finally(() => {
-        navigate({
-          to: '.',
-          search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
-          replace: true,
-        })
+      performVerify({ email, otp })
+      navigate({
+        to: '.',
+        search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
+        replace: true,
       })
     }
   }, [status])
-
-  const onVerifyEmail = async (data: verificationEmailFormValues) => {
-    try {
-      await verifyEmailServerFn({ data })
-      setDisplayVerifyEmailForm(false)
-      toast.success('Account successfully verified, please log in again!')
-    } catch (error: any) {
-      toast.error(
-        error?.message ??
-          'Verification failed, the code may be invalid or expired',
-      )
-    }
-  }
 
   return (
     <>
@@ -86,6 +110,7 @@ function RouteComponent() {
                 <RotateCwIcon /> Forgot Password
               </Button>
               <Button
+                disabled={isVerifying}
                 onClick={() => setDisplayVerifyEmailForm(true)}
                 variant="secondary"
               >
@@ -102,7 +127,8 @@ function RouteComponent() {
       <VerifyEmailPopup
         open={displayVerifyEmailForm}
         setOpen={setDisplayVerifyEmailForm}
-        onVerify={onVerifyEmail}
+        onVerify={performVerify}
+        isVerifying={isVerifying}
       />
     </>
   )

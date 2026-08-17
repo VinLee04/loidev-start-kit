@@ -42,22 +42,24 @@ type verificationEmailFormValues = { email: string; otp: string }
 type PopupProps = {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  onVerify: (data: verificationEmailFormValues) => Promise<void>
+  onVerify: (data: verificationEmailFormValues) => void
+  isVerifying: boolean
 }
 
 const VerifyEmailFormContent = ({
   onVerify,
   onClose,
+  isVerifying,
 }: {
   onVerify: PopupProps['onVerify']
   onClose: () => void
+  isVerifying: boolean
 }) => {
   const { email: emailFromUrl } = Route.useSearch()
   const navigate = Route.useNavigate()
 
   const [emailValue, setEmailValue] = useState(emailFromUrl ?? '')
   const [otpValue, setOtpValue] = useState('')
-  const [loading, setLoading] = useState(false)
   const [resending, setResending] = useState(false)
 
   const isEmailValid = isValidEmail(emailValue)
@@ -97,19 +99,20 @@ const VerifyEmailFormContent = ({
     }
   }
 
-  const handleVerify = async () => {
-    setLoading(true)
-    try {
-      await onVerify({ email: emailValue, otp: otpValue })
-    } catch (error: any) {
-      toast.error(error?.message ?? 'Verification failed')
-    } finally {
-      setLoading(false)
-    }
+  const handleVerify = () => {
+    onVerify({ email: emailValue, otp: otpValue })
   }
 
   return (
-    <>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (isEmailValid && isOtpComplete && !isVerifying) {
+          handleVerify()
+        }
+      }}
+      className="space-y-4"
+    >
       <Label htmlFor="email">Email</Label>
       <div className="flex justify-between gap-2">
         <InputGroup>
@@ -124,6 +127,7 @@ const VerifyEmailFormContent = ({
           />
         </InputGroup>
         <Button
+          type="button"
           className="w-32"
           disabled={!isEmailValid || resending}
           variant="secondary"
@@ -151,18 +155,24 @@ const VerifyEmailFormContent = ({
           </InputOTPGroup>
         </InputOTP>
         <Button
+          type="submit"
           className="w-32"
-          disabled={!isEmailValid || !isOtpComplete || loading}
+          disabled={!isEmailValid || !isOtpComplete || isVerifying}
           onClick={handleVerify}
         >
-          {loading ? 'Verifying...' : 'Verify'}
+          {isVerifying ? 'Verifying...' : 'Verify'}
         </Button>
       </div>
-    </>
+    </form>
   )
 }
 
-const DesktopDialog = ({ open, setOpen, onVerify }: PopupProps) => (
+const DesktopDialog = ({
+  open,
+  setOpen,
+  onVerify,
+  isVerifying,
+}: PopupProps) => (
   <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent className="max-w-fit!">
       <DialogHeader>
@@ -172,6 +182,7 @@ const DesktopDialog = ({ open, setOpen, onVerify }: PopupProps) => (
         </DialogDescription>
       </DialogHeader>
       <VerifyEmailFormContent
+        isVerifying={isVerifying}
         onVerify={onVerify}
         onClose={() => setOpen(false)}
       />
@@ -179,7 +190,7 @@ const DesktopDialog = ({ open, setOpen, onVerify }: PopupProps) => (
   </Dialog>
 )
 
-const MobileDrawer = ({ open, setOpen, onVerify }: PopupProps) => (
+const MobileDrawer = ({ open, setOpen, onVerify, isVerifying }: PopupProps) => (
   <Drawer open={open} onOpenChange={setOpen}>
     <DrawerContent className="p-4">
       <DrawerHeader>
@@ -188,8 +199,9 @@ const MobileDrawer = ({ open, setOpen, onVerify }: PopupProps) => (
           Enter your email and the OTP code sent to it to verify your account
         </DrawerDescription>
       </DrawerHeader>
-      <div className="px-2 pb-8 space-y-4">
+      <div className="px-2 pb-8">
         <VerifyEmailFormContent
+          isVerifying={isVerifying}
           onVerify={onVerify}
           onClose={() => setOpen(false)}
         />
@@ -198,12 +210,27 @@ const MobileDrawer = ({ open, setOpen, onVerify }: PopupProps) => (
   </Drawer>
 )
 
-const VerifyEmailPopup = ({ open, setOpen, onVerify }: PopupProps) => {
+const VerifyEmailPopup = ({
+  open,
+  setOpen,
+  onVerify,
+  isVerifying,
+}: PopupProps) => {
   const isMobile = useIsMobile()
   return isMobile ? (
-    <MobileDrawer open={open} setOpen={setOpen} onVerify={onVerify} />
+    <MobileDrawer
+      open={open}
+      setOpen={setOpen}
+      onVerify={onVerify}
+      isVerifying={isVerifying}
+    />
   ) : (
-    <DesktopDialog open={open} setOpen={setOpen} onVerify={onVerify} />
+    <DesktopDialog
+      open={open}
+      setOpen={setOpen}
+      onVerify={onVerify}
+      isVerifying={isVerifying}
+    />
   )
 }
 
