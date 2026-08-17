@@ -1,12 +1,27 @@
 import { auth } from '#/lib/auth.ts'
 import { createServerFn } from '@tanstack/react-start'
-import { signInSchema, signUpSchema } from '../schema'
-import { sendEmail } from '#/utils/send-email.ts'
+import { signInSchema, signUpSchema, verifyEmailSchema } from '../schema'
+import { db } from '#/db/index.ts'
+import { user } from '#/db/schema/auth.ts'
+import { eq } from 'drizzle-orm'
 
 export const signUpServerFn = createServerFn({ method: 'POST' })
   .validator(signUpSchema)
   .handler(async ({ data }) => {
     const { confirm, ...signUpData } = data
+
+    const existing = await db.query.user.findFirst({
+      where: eq(user.email, data.email),
+    })
+
+    if (existing) {
+      return {
+        success: false as const,
+        code: existing.emailVerified
+          ? 'ALREADY_EXISTS'
+          : 'ALREADY_EXISTS_UNVERIFIED',
+      }
+    }
 
     await auth.api.signUpEmail({
       body: {
@@ -15,14 +30,12 @@ export const signUpServerFn = createServerFn({ method: 'POST' })
         callbackURL: `${process.env.APP_URL}/sign-up`,
       },
     })
-    await sendEmail({
-      data: {
-        name: data.name,
-        to: data.email,
-        subject: 'Chào mừng bạn!',
-        message: 'Cảm ơn bạn đã đăng ký.',
-      },
+
+    await auth.api.sendVerificationOTP({
+      body: { email: data.email, type: 'email-verification' },
     })
+
+    return { success: true as const }
   })
 
 export const signInServerFn = createServerFn({ method: 'POST' })
@@ -33,5 +46,13 @@ export const signInServerFn = createServerFn({ method: 'POST' })
         ...data,
         callbackURL: `${process.env.APP_URL}/sign-in`,
       },
+    })
+  })
+
+export const verifyEmailServerFn = createServerFn({ method: 'POST' })
+  .validator(verifyEmailSchema)
+  .handler(async ({ data }) => {
+    await auth.api.verifyEmailOTP({
+      body: { ...data },
     })
   })

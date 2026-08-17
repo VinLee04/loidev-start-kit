@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-start-starter",
+  "name": "loidev-start-kit",
   "private": true,
   "type": "module",
   "imports": {
@@ -55,6 +55,7 @@
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.1.18",
     "tw-animate-css": "^1.3.6",
+    "vaul": "^1.1.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {

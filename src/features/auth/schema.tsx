@@ -29,3 +29,11 @@ export const signInSchema = z.object({
 })
 
 export type SignInFormValues = z.infer<typeof signInSchema>
+
+// Schema cho chức năng xác thực email bằng OTP
+export const verifyEmailSchema = z.object({
+  email: z.email({ message: 'Invalid email format' }),
+  otp: z.string().length(6, { message: 'OTP must be exactly 6 digits' }),
+})
+
+export type verificationEmailFormValues = z.infer<typeof verifyEmailSchema>

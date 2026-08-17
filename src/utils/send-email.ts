@@ -1,42 +1,45 @@
 // src/utils/send-email.ts
-import { DemoEmailTemplate } from '#/components/email/demo-template.tsx'
+import { emailTemplates } from '#/lib/email-templates.tsx'
 import { resend } from '#/lib/resend.ts'
 import { createServerFn } from '@tanstack/react-start'
 import { randomUUID } from 'node:crypto'
 import z from 'zod'
 
 const sendEmailSchema = z.object({
-  name: z.string(),
+  type: z.enum([
+    'email-verification',
+    'sign-in',
+    'forget-password',
+    'change-email',
+  ]),
   to: z.email(),
-  subject: z.string(),
-  message: z.string(),
+  name: z.string().optional(),
+  otp: z.string().optional(),
   preventThreading: z.boolean().optional(),
 })
 
 export const sendEmail = createServerFn({ method: 'POST' })
   .validator(sendEmailSchema)
-  .handler(
-    async ({ data: { name, to, subject, message, preventThreading } }) => {
-      if (!resend) {
-        console.warn('[sendEmail] Bỏ qua: thiếu RESEND_API_KEY trong .env')
-        return null
-      }
+  .handler(async ({ data }) => {
+    if (!resend) {
+      console.warn('[sendEmail] Skipped: RESEND_API_KEY is missing from .env')
+      return null
+    }
 
-      const emailOptions: Parameters<typeof resend.emails.send>[0] = {
-        from: process.env.EMAIL_FROM || 'Vĩnh Lợi <onboarding@resend.dev>',
-        to: [to],
-        subject,
-        react: DemoEmailTemplate({ name, message }),
-      }
+    const template = emailTemplates[data.type]
 
-      if (preventThreading) {
-        emailOptions.headers = { 'X-Entity-Ref-ID': randomUUID() }
-      }
+    const emailOptions: Parameters<typeof resend.emails.send>[0] = {
+      from: process.env.EMAIL_FROM || 'Vĩnh Lợi <onboarding@resend.dev>',
+      to: [data.to],
+      subject: template.subject,
+      react: template.render(data as any),
+    }
 
-      const { data, error } = await resend.emails.send(emailOptions)
-      if (error) {
-        throw new Error(error.message) // ném lỗi thật, để nơi gọi tự catch
-      }
-      return data
-    },
-  )
+    if (data.preventThreading) {
+      emailOptions.headers = { 'X-Entity-Ref-ID': randomUUID() }
+    }
+
+    const { data: result, error } = await resend.emails.send(emailOptions)
+    if (error) throw new Error(error.message)
+    return result
+  })

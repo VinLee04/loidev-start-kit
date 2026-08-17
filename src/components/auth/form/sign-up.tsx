@@ -3,9 +3,10 @@ import {
   signUpFormOpts,
 } from '#/features/auth/form/sign-up.tsx'
 import { signUpServerFn } from '#/features/auth/server/auth.ts'
-import { sessionQueryOptions } from '#/features/auth/server/session.ts'
 import { useAppForm, withForm } from '#/lib/form/form-hook.ts'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import type { SignInStatus } from '#/routes/_authentication/sign-in.tsx'
+import { getRouteApi } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 export const SignUpFormComponent = withForm({
   ...signUpFormOpts,
@@ -30,22 +31,47 @@ export const SignUpFormComponent = withForm({
 const Route = getRouteApi('/_authentication/sign-up')
 
 const SignUpForm = () => {
-  const navigate = useNavigate()
-  const { queryClient } = Route.useRouteContext()
+  const navigate = Route.useNavigate()
+
+  const goToSignIn = (email: string, status?: SignInStatus) =>
+    navigate({
+      to: '/sign-in',
+      search: { status, email },
+    })
 
   const signUpForm = useAppForm({
     ...signUpFormOpts,
     onSubmit: async (values) => {
-      await signUpServerFn({ data: values.value })
+      const result = await signUpServerFn({ data: values.value })
+
+      if (!result.success) {
+        if (result.code === 'ALREADY_EXISTS_UNVERIFIED') {
+          toast.warning(
+            'This email is already registered but not verified yet.',
+            {
+              description: 'Please verify your account on the sign-in page.',
+              action: {
+                label: 'Go to verify',
+                onClick: () => goToSignIn(values.value.email, 'manual-verify'),
+              },
+            },
+          )
+        } else {
+          toast.error(
+            'This email is already registered. Please sign in instead.',
+            {
+              action: {
+                label: 'Go to sign in',
+                onClick: () => goToSignIn(values.value.email),
+              },
+            },
+          )
+        }
+      } else {
+        toast.success('Account created! Check your email to verify.')
+        goToSignIn(values.value.email, 'manual-verify')
+      }
       signUpForm.reset()
-      await queryClient.invalidateQueries({
-        queryKey: sessionQueryOptions.queryKey,
-      })
-      navigate({
-        from: '/sign-up',
-        to: '/sign-in',
-        search: { status: 'signup', email: values.value.email },
-      })
     },
   })
 

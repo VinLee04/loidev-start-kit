@@ -1,15 +1,19 @@
 <div align="center">
 
-# TanStack Start Starter
+# Lợi Dev Start Kit
 
 A free, end-to-end TanStack Start starter - auth, database, forms, and UI already wired up, ready to clone and extend.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Built with TanStack Start](https://img.shields.io/badge/Built%20with-TanStack%20Start-FF4154?logo=tanstack&logoColor=white)](https://tanstack.com/start)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://tanstack-start-starter-pied.vercel.app)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://start.vinhloi.tech)
 
-**[Live Demo](https://tanstack-start-starter-pied.vercel.app)**
+**[Live Demo](https://start.vinhloi.tech)**
+
+A community starter built on TanStack Start.
+
+**by Lợi Dev** - [vinhloi.tech](https://vinhloi.tech)
 
 </div>
 
@@ -17,19 +21,17 @@ A free, end-to-end TanStack Start starter - auth, database, forms, and UI alread
 
 ## 📖 About
 
-This is a starter project built with **TanStack Start**, meant to be cloned and adapted for your own projects. Every piece of the stack - from local development to production deployment - runs entirely on **free tiers**, no paid service required.
-
-> **Note:** Field names and code comments are written in Vietnamese for now. An i18n setup is planned for later.
+This is an **unofficial, community-made** starter project built with **TanStack Start**, meant to be cloned and adapted for your own projects. It is not affiliated with or endorsed by the TanStack team. Every piece of the stack - from local development to production deployment - runs entirely on **free tiers**, no paid service required.
 
 ## ✨ Current Features
 
-- ✅ Email sign up - automatically signed in right after registration
-- ✅ Email sign in - email verification is not yet mandatory
+- ✅ Email sign up - send otp via email after sign up successfully (manual/auto verify otp)
+- ✅ Email sign in - email verification (require)
 - ✅ Profile page displaying account information
 - ✅ Auto-generated avatar on sign up (via [DiceBear](https://www.dicebear.com/))
 - ✅ Responsive header - shows **Sign in / Sign up** buttons when logged out, and an avatar dropdown (Profile / Sign out) when logged in
 - ✅ Light / Dark / System theme switch
-- ✅ Route protection for authenticated pages
+- ✅ Route protection for authenticated pages (profile)
 - ✅ Session caching synced between server and client via TanStack Query
 - ✅ Basic send email with Resend
 
@@ -68,8 +70,8 @@ This is a starter project built with **TanStack Start**, meant to be cloned and 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/VinLee04/tanstack-start-starter.git
-cd tanstack-start-starter
+git clone https://github.com/VinLee04/loidev-start-kit.git
+cd loidev-start-kit
 ```
 
 ### 2. Install dependencies
@@ -117,6 +119,8 @@ Make user you copied `.env.example` to `.env`, [open it](.env) and fill in the f
 | `BETTER_AUTH_SECRET` | Secret key used to sign sessions | Run `npx -y @better-auth/cli secret` and paste the generated value |
 | `RESEND_API_KEY` | Sending emails | Optional, if left blank, the app still runs but emails won't be sent (a warning is logged) |
 | `EMAIL_FROM` | Sender name/address shown in emails | Optional, defaults to Resend's test address if left blank |
+| `APP_NAME` | Sender display name shown in outgoing emails | Optional, default blank |
+| `APP_LOGO_URL` | Logo image URL shown in outgoing emails | Optional, default blank |
 
 > Never commit your `.env` file. Only `.env.example` (with placeholder values) should be tracked by Git. -->
 

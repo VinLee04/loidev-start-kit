@@ -50,7 +50,7 @@ const TanstackStartStarterGithubRepo = () => {
             </div>
           </div>
           <CardTitle className="text-xl items-center flex">
-            TanStack Start Starter
+            Lợi Dev Start Kit
             {updatedLabel && (
               <Badge
                 variant="success-light"
@@ -61,9 +61,9 @@ const TanstackStartStarterGithubRepo = () => {
             )}
           </CardTitle>
           <CardDescription>
-            While the game is loading, I'm cooking up a free starter kit for
-            TanStack Start - auth, database, forms, and UI already wired up.
-            Clone it, deploy it for free, ship it.
+            Everything you need to start a TanStack Start project - auth,
+            database, forms, and UI already wired up. Free to clone, free to
+            deploy, ready to ship.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -108,7 +108,7 @@ const TanstackStartStarterGithubRepo = () => {
         <CardFooter className="flex flex-wrap gap-2">
           <Button asChild>
             <a
-              href="https://tanstack-start-starter-pied.vercel.app"
+              href="https://start.vinhloi.tech"
               target="_blank"
               rel="noreferrer"
             >
@@ -117,7 +117,7 @@ const TanstackStartStarterGithubRepo = () => {
           </Button>
           <Button asChild variant="outline">
             <a
-              href="https://github.com/VinLee04/tanstack-start-starter"
+              href="https://github.com/VinLee04/loidev-start-kit"
               target="_blank"
               rel="noreferrer"
             >

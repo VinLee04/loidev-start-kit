@@ -11,8 +11,8 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { Toaster } from 'sonner';
-import { ThemeProvider } from '#/components/ui/theme-provider.tsx';
+import { Toaster } from 'sonner'
+import { ThemeProvider } from '#/components/ui/theme-provider.tsx'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -21,22 +21,16 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
+      { charSet: 'utf-8' },
       {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
-        title: 'TanStack Start Starter',
-      },
+      { title: 'Lợi Dev Start Kit' },
     ],
     links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
+      { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', type: 'image/png', href: '/logo.png' },
     ],
   }),
   shellComponent: RootDocument,
@@ -49,7 +43,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Toaster position='top-center' richColors />
+        <Toaster position="top-center" richColors />
         <ThemeProvider defaultTheme="system" storageKey="theme">
           {children}
         </ThemeProvider>
