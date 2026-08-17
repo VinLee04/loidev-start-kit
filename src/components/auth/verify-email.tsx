@@ -1,9 +1,19 @@
 // verify-email-popup.tsx
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { MailIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '#/components/ui/dialog'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '#/components/ui/drawer'
 import {
   InputGroup,
   InputGroupAddon,
@@ -14,25 +24,16 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '#/components/ui/input-otp'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '#/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-} from '#/components/ui/drawer'
-import { useIsMobile } from '#/hooks/use-is-mobile'
-import { isValidEmail } from '#/utils/is-valid-email'
-import { authClient } from '#/lib/auth-client'
-import { getRouteApi } from '@tanstack/react-router'
+import { Label } from '#/components/ui/label'
 import { checkEmailVerifiedServerFn } from '#/features/auth/server/auth.ts'
+import { useIsMobile } from '#/hooks/use-is-mobile'
+import { authClient } from '#/lib/auth-client'
+import { isValidEmail } from '#/utils/is-valid-email'
+import { getRouteApi } from '@tanstack/react-router'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { MailIcon } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const Route = getRouteApi('/_authentication/sign-in')
 
@@ -141,6 +142,7 @@ const VerifyEmailFormContent = ({
           onChange={setOtpValue}
           maxLength={6}
           inputMode="numeric"
+          pattern={REGEXP_ONLY_DIGITS}
         >
           <InputOTPGroup>
             {Array.from({ length: 6 }).map((_, i) => (
