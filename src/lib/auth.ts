@@ -11,6 +11,20 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),
+  user: {
+    deleteUser: {
+      enabled: true,
+      // sendDeleteAccountVerification: async ({ user, url, token }) => {
+      // 	// Send delete account verification
+      // },
+      // beforeDelete: async (user) => {
+      // 	// Perform actions before user deletion
+      // },
+      // afterDelete: async (user) => {
+      // 	// Perform cleanup after user deletion
+      // }
+    },
+  },
   emailAndPassword: {
     enabled: true,
 

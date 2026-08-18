@@ -42,3 +42,10 @@ export type verificationEmailFormValues = z.infer<typeof verifyEmailSchema>
 export const checkEmailVerifiedSchema = z.object({
   email: z.email(),
 })
+
+// Schema cho chức năng ngưởi dùng tự delete tài khoản của họ
+export const deleteUserSchema = z.object({
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
+})

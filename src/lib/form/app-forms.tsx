@@ -33,7 +33,7 @@ export function TextField({
 }) {
   const field = useFieldContext<string>()
   const { isInvalid, fieldErrors } = useFieldStatus()
-  const [isHide, setIsHide] = useState(true)
+  const [isHidePassword, setIsHidePassword] = useState(true)
 
   return (
     <Field data-invalid={isInvalid} className="gap-1.5">
@@ -48,11 +48,11 @@ export function TextField({
           <InputGroupAddon align="inline-end">
             <InputGroupButton
               onMouseDown={(e) => e.preventDefault()}
-              onClick={() => setIsHide((prev) => !prev)}
+              onClick={() => setIsHidePassword((prev) => !prev)}
               tabIndex={-1}
               className="rounded-md"
             >
-              {isHide ? <EyeIcon /> : <EyeOffIcon />}
+              {isHidePassword ? <EyeIcon /> : <EyeOffIcon />}
             </InputGroupButton>
           </InputGroupAddon>
         )}
@@ -61,7 +61,7 @@ export function TextField({
           autoComplete="off"
           id={field.name}
           name={field.name}
-          type={isHide ? type : 'text'}
+          type={isHidePassword ? type : 'text'}
           placeholder={placeholder}
           value={field.state.value}
           onBlur={field.handleBlur}

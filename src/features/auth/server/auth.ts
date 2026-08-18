@@ -2,6 +2,7 @@ import { auth } from '#/lib/auth.ts'
 import { createServerFn } from '@tanstack/react-start'
 import {
   checkEmailVerifiedSchema,
+  deleteUserSchema,
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
@@ -9,6 +10,7 @@ import {
 import { db } from '#/db/index.ts'
 import { user } from '#/db/schema/auth.ts'
 import { eq } from 'drizzle-orm'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 
 export const signUpServerFn = createServerFn({ method: 'POST' })
   .validator(signUpSchema)
@@ -73,4 +75,13 @@ export const checkEmailVerifiedServerFn = createServerFn({ method: 'GET' })
       exists: !!existingUser,
       verified: existingUser?.emailVerified ?? false,
     }
+  })
+
+export const deleteUserServerFn = createServerFn({ method: 'POST' })
+  .validator(deleteUserSchema)
+  .handler(async ({ data: { password } }) => {
+    await auth.api.deleteUser({
+      body: { password },
+      headers: getRequestHeaders(),
+    })
   })

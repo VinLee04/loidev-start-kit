@@ -20,6 +20,7 @@ import {
   SpadeIcon,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import DeleteAccountButton from '#/components/profile/actions/delete-account.tsx'
 
 export const Route = createFileRoute('/_authenticated/profile')({
   component: RouteComponent,
@@ -32,7 +33,6 @@ function RouteComponent() {
   // TODO: Đổi mật khẩu
   // TODO: Quên mật khẩu
   // TODO: Xóa tài khoản và toàn bộ thông tin liên quan
-  // TODO: Xác thực email nếu chưa
   // TODO: Chỉnh sửa profile (name, image)
 
   const onSignOut = () =>
@@ -67,15 +67,17 @@ function RouteComponent() {
               <DropdownMenuContent>
                 <DropdownMenuItem>Change Password</DropdownMenuItem>
                 <DropdownMenuItem>Forgot Password</DropdownMenuItem>
+
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem variant="destructive" disabled>
-                  Delete Account
+                <DropdownMenuItem variant="destructive" onClick={onSignOut}>
+                  Sign Out
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={onSignOut}>
-                  Sign Out
+
+                <DropdownMenuItem variant="destructive" asChild>
+                  <DeleteAccountButton />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -83,9 +85,7 @@ function RouteComponent() {
         </div>
 
         <div className="md:flex hidden absolute bottom-0 left-0 w-full translate-y-1/2 gap-x-2">
-          <Button variant="destructive" className="mr-auto" disabled>
-            Delete Account
-          </Button>
+          <DeleteAccountButton />
 
           <Button variant="secondary">Change Password</Button>
           <Button variant="secondary">Forgot Password</Button>
