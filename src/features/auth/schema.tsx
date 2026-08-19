@@ -43,9 +43,21 @@ export const checkEmailVerifiedSchema = z.object({
   email: z.email(),
 })
 
-// Schema cho chức năng ngưởi dùng tự delete tài khoản của họ
+// Schema cho chức năng người dùng tự delete tài khoản của họ
 export const deleteUserSchema = z.object({
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters' }),
 })
+
+// Schema cho chức năng đổi mật khẩu
+export const changePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
+  newPassword: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
+})
+
+export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>

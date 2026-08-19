@@ -15,6 +15,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { useFieldContext, useFormContext } from './form-context'
 import { useFieldStatus } from './use-field-status'
+import { useSelector } from '@tanstack/react-form'
 
 export function TextField({
   ref,
@@ -165,5 +166,30 @@ export function SubscribeButton({ label }: { label: string }) {
         </Button>
       )}
     </form.Subscribe>
+  )
+}
+
+export function ResetAndSubscribeForm({ label }: { label: string }) {
+  const form = useFormContext()
+  const isSubmitting = useSelector(form.store, (state) => state.isSubmitting)
+
+  return (
+    <div className="flex gap-2 w-full">
+      <Button
+        type="reset"
+        variant="secondary"
+        disabled={isSubmitting}
+        className="cursor-pointer mt-4 min-w-32 sm:min-w-40"
+        onClick={() => {
+          form.reset()
+          ;(document.querySelector('form input') as HTMLFormElement).focus()
+        }}
+      >
+        Reset
+      </Button>
+      <div className="flex-1">
+        <SubscribeButton label={label} />
+      </div>
+    </div>
   )
 }

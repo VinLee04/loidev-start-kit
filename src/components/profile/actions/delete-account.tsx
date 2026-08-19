@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useNavigate } from '@tanstack/react-router'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, UserXIcon } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -91,10 +91,15 @@ const DeleteAccountButton = () => {
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={onCancelDelete} disabled={isPending}>
+            <AlertDialogCancel
+              variant="outline"
+              onClick={onCancelDelete}
+              disabled={isPending}
+            >
               No, I don't
             </AlertDialogCancel>
             <AlertDialogAction
+              variant="destructive"
               disabled={password.length < 8 || isPending}
               onClick={(e) => {
                 e.preventDefault()
@@ -112,7 +117,7 @@ const DeleteAccountButton = () => {
         className="mr-auto"
         onClick={() => setOpenAskAfterDelete(true)}
       >
-        Delete Account
+        <UserXIcon /> Delete Account
       </Button>
     </>
   )

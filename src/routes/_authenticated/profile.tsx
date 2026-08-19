@@ -15,12 +15,16 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import {
   CarrotIcon,
+  HomeIcon,
+  LogOutIcon,
+  Settings2Icon,
   ShieldBanIcon,
   ShieldCheckIcon,
   SpadeIcon,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import DeleteAccountButton from '#/components/profile/actions/delete-account.tsx'
+import ChangePasswordButton from '#/components/profile/actions/change-password.tsx'
 
 export const Route = createFileRoute('/_authenticated/profile')({
   component: RouteComponent,
@@ -54,6 +58,7 @@ function RouteComponent() {
         <div className="md:absolute top-0 left-0 md:-translate-y-1/2 flex justify-between">
           <div className="flex gap-x-2">
             <Link to=".." className={buttonVariants()}>
+              <HomeIcon />
               Back to Home
             </Link>
             <ModeToggle />
@@ -62,23 +67,22 @@ function RouteComponent() {
           <div className="flex md:hidden gap-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary">Features</Button>
+                <Button variant="secondary">
+                  <Settings2Icon /> Actions
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Change Password</DropdownMenuItem>
-                <DropdownMenuItem>Forgot Password</DropdownMenuItem>
+              <DropdownMenuContent className="*:px-3 *:w-full">
+                <ChangePasswordButton />
+                {/* <DropdownMenuItem>Forgot Password</DropdownMenuItem> */}
 
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem variant="destructive" onClick={onSignOut}>
-                  Sign Out
+                  <LogOutIcon /> Sign Out
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
-
-                <DropdownMenuItem variant="destructive" asChild>
-                  <DeleteAccountButton />
-                </DropdownMenuItem>
+                <DeleteAccountButton />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -87,10 +91,10 @@ function RouteComponent() {
         <div className="md:flex hidden absolute bottom-0 left-0 w-full translate-y-1/2 gap-x-2">
           <DeleteAccountButton />
 
-          <Button variant="secondary">Change Password</Button>
-          <Button variant="secondary">Forgot Password</Button>
-          <Button variant="default" onClick={onSignOut}>
-            Sign Out
+          <ChangePasswordButton />
+          {/* <Button variant="secondary">Forgot Password</Button> */}
+          <Button variant="destructive" onClick={onSignOut}>
+            <LogOutIcon /> Sign Out
           </Button>
         </div>
 

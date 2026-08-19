@@ -1,6 +1,7 @@
 import { auth } from '#/lib/auth.ts'
 import { createServerFn } from '@tanstack/react-start'
 import {
+  changePasswordSchema,
   checkEmailVerifiedSchema,
   deleteUserSchema,
   signInSchema,
@@ -82,6 +83,19 @@ export const deleteUserServerFn = createServerFn({ method: 'POST' })
   .handler(async ({ data: { password } }) => {
     await auth.api.deleteUser({
       body: { password },
+      headers: getRequestHeaders(),
+    })
+  })
+
+export const changePasswordServerFn = createServerFn({ method: 'POST' })
+  .validator(changePasswordSchema)
+  .handler(async ({ data }) => {
+    await auth.api.changePassword({
+      body: {
+        ...data,
+        // When set to true, all other active sessions for this user will be invalidated
+        revokeOtherSessions: true,
+      },
       headers: getRequestHeaders(),
     })
   })
