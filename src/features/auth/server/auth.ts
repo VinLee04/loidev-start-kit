@@ -4,6 +4,8 @@ import {
   changePasswordSchema,
   checkEmailVerifiedSchema,
   deleteUserSchema,
+  requestResetPasswordSchema,
+  resetPasswordSchema,
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
@@ -97,5 +99,21 @@ export const changePasswordServerFn = createServerFn({ method: 'POST' })
         revokeOtherSessions: true,
       },
       headers: getRequestHeaders(),
+    })
+  })
+
+export const requestResetPasswordServerFn = createServerFn({ method: 'POST' })
+  .validator(requestResetPasswordSchema)
+  .handler(async ({ data }) => {
+    await auth.api.requestPasswordResetEmailOTP({
+      body: { ...data },
+    })
+  })
+
+export const resetPasswordOTPServerFn = createServerFn({ method: 'POST' })
+  .validator(resetPasswordSchema)
+  .handler(async ({ data }) => {
+    await auth.api.resetPasswordEmailOTP({
+      body: { ...data },
     })
   })

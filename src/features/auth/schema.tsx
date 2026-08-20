@@ -40,7 +40,7 @@ export type verificationEmailFormValues = z.infer<typeof verifyEmailSchema>
 
 // Schema cho chức năng kiểm tra email đã xác thực chưa
 export const checkEmailVerifiedSchema = z.object({
-  email: z.email(),
+  email: z.email({ message: 'Invalid email format' }),
 })
 
 // Schema cho chức năng người dùng tự delete tài khoản của họ
@@ -61,3 +61,19 @@ export const changePasswordSchema = z.object({
 })
 
 export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>
+
+// Schema cho chức năng yêu cầu đặt lại mật khẩu
+export const requestResetPasswordSchema = z.object({
+  email: z.email({ message: 'Invalid email format' }),
+})
+
+// Schema cho chức năng đặt lại mật khẩu
+export const resetPasswordSchema = z.object({
+  email: z.email({ message: 'Invalid email format' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
+  otp: z.string().length(6, { message: 'OTP must be exactly 6 digits' }),
+})
+
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>

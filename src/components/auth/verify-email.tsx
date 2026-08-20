@@ -25,6 +25,7 @@ import {
   InputOTPSlot,
 } from '#/components/ui/input-otp'
 import { Label } from '#/components/ui/label'
+import type { verificationEmailFormValues } from '#/features/auth/schema.tsx'
 import { checkEmailVerifiedServerFn } from '#/features/auth/server/auth.ts'
 import { useIsMobile } from '#/hooks/use-is-mobile'
 import { authClient } from '#/lib/auth-client'
@@ -36,8 +37,6 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 const Route = getRouteApi('/_authentication/sign-in')
-
-type verificationEmailFormValues = { email: string; otp: string }
 
 type PopupProps = {
   open: boolean
@@ -158,7 +157,6 @@ const VerifyEmailFormContent = ({
           type="submit"
           className="w-32"
           disabled={!isEmailValid || !isOtpComplete || isVerifying}
-          onClick={handleVerify}
         >
           {isVerifying ? 'Verifying...' : 'Verify'}
         </Button>

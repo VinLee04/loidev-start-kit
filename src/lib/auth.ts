@@ -81,8 +81,18 @@ export const auth = betterAuth({
         } else if (type === 'sign-in') {
           // Send the OTP for sign in
         } else if (type === 'forget-password') {
-          // Send the OTP for password reset
-        } else {
+          const currentUser = await db.query.user.findFirst({
+            where: eq(user.email, email),
+          })
+
+          if (!currentUser) return
+
+          await sendEmail({
+            type: 'forget-password',
+            to: email,
+            name: currentUser.name,
+            otp,
+          })
           // Send the OTP for change email
         }
       },

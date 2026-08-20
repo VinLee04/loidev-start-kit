@@ -1,11 +1,5 @@
 import { Button } from '#/components/ui/button.tsx'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from '#/components/ui/input-group.tsx'
-import { Label } from '#/components/ui/label.tsx'
+import { PasswordInputField } from '#/components/ui/password-input-field.tsx'
 import { deleteUserServerFn } from '#/features/auth/server/auth.ts'
 import {
   AlertDialog,
@@ -18,7 +12,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useNavigate } from '@tanstack/react-router'
-import { EyeIcon, EyeOffIcon, UserXIcon } from 'lucide-react'
+import { UserXIcon } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -27,7 +21,6 @@ const DeleteAccountButton = () => {
   const [openAskAfterDelete, setOpenAskAfterDelete] = useState(false)
   const [password, setPassword] = useState('')
   const [isPending, startTransition] = useTransition()
-  const [isHidePassword, setIsHidePassword] = useState(true)
 
   const onCancelDelete = () => {
     setPassword('')
@@ -63,31 +56,11 @@ const DeleteAccountButton = () => {
               account and remove your data from our servers.
             </AlertDialogDescription>
             <div className="mt-6 space-y-3 w-full">
-              <Label>Password</Label>
-              <InputGroup>
-                <InputGroupInput
-                  readOnly={isPending}
-                  type={isHidePassword ? 'password' : 'text'}
-                  autoFocus
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' &&
-                    password.length >= 8 &&
-                    onDeleteAccount()
-                  }
-                />
-                <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => setIsHidePassword((prev) => !prev)}
-                    tabIndex={-1}
-                    className="rounded-md"
-                  >
-                    {isHidePassword ? <EyeIcon /> : <EyeOffIcon />}
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
+              <PasswordInputField
+                isPending={isPending}
+                password={password}
+                setPassword={setPassword}
+              />
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>

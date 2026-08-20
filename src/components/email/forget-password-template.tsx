@@ -1,4 +1,4 @@
-// components/email/email-verification-template.tsx
+// components/email/forget-password-template.tsx
 
 type Props = {
   name: string
@@ -13,7 +13,7 @@ const buttonStyle = {
   display: 'block',
   width: '100%',
   maxWidth: 260,
-  margin: '0 auto 12px auto',
+  margin: '0 auto',
   boxSizing: 'border-box' as const,
   padding: '12px 16px',
   color: '#ffffff',
@@ -24,8 +24,10 @@ const buttonStyle = {
   textAlign: 'center' as const,
 }
 
-export function EmailVerificationTemplate({ name, otp, email }: Props) {
-  const verifyUrl = `${appUrl}/sign-in?email=${encodeURIComponent(email)}&status=auto-verify&otp=${encodeURIComponent(otp)}`
+export function ForgetPasswordTemplate({ name, email, otp }: Props) {
+  // Link đưa thẳng người dùng tới trang reset password với email + otp
+  // đã điền sẵn trên URL, form phía client tự đọc query để auto-fill OTP.
+  const resetUrl = `${appUrl}/sign-in?status=reset-password&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`
 
   return (
     <html>
@@ -41,24 +43,27 @@ export function EmailVerificationTemplate({ name, otp, email }: Props) {
             color: '#111827',
           }}
         >
-          <h2 style={{ marginBottom: 4 }}>Welcome, {name} 👋</h2>
-          <p>Thanks for signing up on {appName}.</p>
+          <h2 style={{ marginBottom: 4 }}>Hi, {name} 👋</h2>
+          <p>
+            We received a request to reset the password for your account (
+            {email}) on {appName}.
+          </p>
 
-          <p>Use the code below to verify your email address:</p>
+          <p>Use the code below to reset your password:</p>
           <p style={{ fontSize: 28, fontWeight: 700, letterSpacing: 4 }}>
             {otp}
           </p>
           <p style={{ color: '#6B7280', fontSize: 13 }}>
             This code will expire shortly. If you didn't request this, you can
-            ignore this email.
+            safely ignore this email, your password will not be changed.
           </p>
 
           <div style={{ marginTop: 20, textAlign: 'center' }}>
             <a
               style={{ ...buttonStyle, backgroundColor: '#2E2910' }}
-              href={verifyUrl}
+              href={resetUrl}
             >
-              Automatically Verify ✔️
+              Automatically Fill Code ✔️
             </a>
           </div>
 

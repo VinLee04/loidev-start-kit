@@ -1,5 +1,6 @@
 // lib/email-templates.tsx
 import { EmailVerificationTemplate } from '#/components/email/email-verification-template.tsx'
+import { ForgetPasswordTemplate } from '#/components/email/forget-password-template.tsx'
 
 export const emailTemplates = {
   'email-verification': {
@@ -14,7 +15,9 @@ export const emailTemplates = {
   },
   'forget-password': {
     subject: 'Reset your password',
-    render: () => <></>,
+    render: (d: { name: string; otp: string; to: string }) => (
+      <ForgetPasswordTemplate name={d.name} otp={d.otp} email={d.to} />
+    ),
   },
   'change-email': {
     subject: 'Change your email',

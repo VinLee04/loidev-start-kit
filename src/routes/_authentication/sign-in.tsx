@@ -1,4 +1,5 @@
 import AuthWrapper from '#/components/auth/auth-wrapper.tsx'
+import ForgotPasswordPopup from '#/components/auth/forgot-password.tsx'
 import SignInForm from '#/components/auth/form/sign-in.tsx'
 import VerifyEmailPopup from '#/components/auth/verify-email.tsx'
 import { Spinner } from '#/components/ui/spinner.tsx'
@@ -7,10 +8,8 @@ import { verifyEmailServerFn } from '#/features/auth/server/auth.ts'
 import { Button } from '@/components/ui/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
-  CheckIcon,
   CircleAlertIcon,
   CircleCheckIcon,
-  FlameIcon,
   RotateCwIcon,
   Shield,
 } from 'lucide-react'
@@ -18,7 +17,11 @@ import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import z from 'zod'
 
-export const SignInStatus = ['auto-verify', 'manual-verify'] as const
+export const SignInStatus = [
+  'auto-verify',
+  'manual-verify',
+  'reset-password',
+] as const
 export type SignInStatus = (typeof SignInStatus)[number]
 
 const SignInParams = z.object({
@@ -37,6 +40,8 @@ function RouteComponent() {
   const navigate = Route.useNavigate()
   const hasShownToast = useRef(false)
   const [displayVerifyEmailForm, setDisplayVerifyEmailForm] = useState(false)
+  const [displayForgotPasswordEmailForm, setDisplayForgotPasswordForm] =
+    useState(false)
   const [isVerifying, startVerify] = useTransition()
 
   const performVerify = async (data: verificationEmailFormValues) => {
@@ -73,8 +78,39 @@ function RouteComponent() {
     if (hasShownToast.current) return
     hasShownToast.current = true
 
-    if (status === 'manual-verify') {
-      setDisplayVerifyEmailForm(true)
+    switch (status) {
+      case 'manual-verify':
+        setDisplayVerifyEmailForm(true)
+        navigate({
+          to: '.',
+          search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
+          replace: true,
+        })
+        break
+
+      case 'auto-verify':
+        navigate({
+          to: '.',
+          search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
+          replace: true,
+        })
+        break
+
+      case 'reset-password':
+        setDisplayForgotPasswordForm(true)
+        navigate({
+          to: '.',
+          search: (prev) => ({ ...prev, status: undefined }),
+          replace: true,
+        })
+        break
+
+      default:
+        break
+    }
+
+    if (status === 'auto-verify' && email && otp) {
+      performVerify({ email, otp })
       navigate({
         to: '.',
         search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
@@ -82,8 +118,8 @@ function RouteComponent() {
       })
     }
 
-    if (status === 'auto-verify' && email && otp) {
-      performVerify({ email, otp })
+    if (status === 'manual-verify') {
+      setDisplayVerifyEmailForm(true)
       navigate({
         to: '.',
         search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
@@ -106,7 +142,10 @@ function RouteComponent() {
               </Link>
             </p>
             <div className="mt-8 flex *:flex-1 gap-4">
-              <Button disabled variant="secondary">
+              <Button
+                onClick={() => setDisplayForgotPasswordForm(true)}
+                variant="secondary"
+              >
                 <RotateCwIcon /> Forgot Password
               </Button>
               <Button
@@ -129,6 +168,10 @@ function RouteComponent() {
         setOpen={setDisplayVerifyEmailForm}
         onVerify={performVerify}
         isVerifying={isVerifying}
+      />
+      <ForgotPasswordPopup
+        open={displayForgotPasswordEmailForm}
+        setOpen={setDisplayForgotPasswordForm}
       />
     </>
   )
