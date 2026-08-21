@@ -1,70 +1,8 @@
 import ChangePasswordForm from '#/components/auth/form/change-password.tsx'
 import { Button } from '#/components/ui/button.tsx'
-import { useIsMobile } from '#/hooks/use-is-mobile.ts'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
+import ResponsivePopup from '#/components/ui/responsive-popup.tsx'
 import { RotateCcwKeyIcon } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
-
-type ChangePasswordPopup = {
-  title: string
-  description: string
-  open: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
-}
-
-const ChangePasswordDesktopDialog = ({
-  title,
-  description,
-  open,
-  setOpen,
-}: ChangePasswordPopup) => {
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription> {description} </DialogDescription>
-        </DialogHeader>
-        <ChangePasswordForm onClose={() => setOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-const ChangePasswordMobileDrawer = ({
-  title,
-  description,
-  open,
-  setOpen,
-}: ChangePasswordPopup) => {
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle className="p-4">{title}</DrawerTitle>
-          <DrawerDescription>{description}</DrawerDescription>
-        </DrawerHeader>
-        <div className="px-4 pb-8">
-          <ChangePasswordForm onClose={() => setOpen(false)} />
-        </div>
-      </DrawerContent>
-    </Drawer>
-  )
-}
 
 const formInfo = {
   title: 'Change your password here',
@@ -73,32 +11,17 @@ const formInfo = {
 }
 
 const ChangePasswordButton = () => {
-  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
-    useState(false)
-  const isMobile = useIsMobile()
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => setOpenChangePasswordDialog(true)}
-      >
+      <Button variant="secondary" onClick={() => setOpen(true)}>
         <RotateCcwKeyIcon /> Change Password
       </Button>
 
-      {isMobile ? (
-        <ChangePasswordMobileDrawer
-          {...formInfo}
-          open={openChangePasswordDialog}
-          setOpen={setOpenChangePasswordDialog}
-        />
-      ) : (
-        <ChangePasswordDesktopDialog
-          {...formInfo}
-          open={openChangePasswordDialog}
-          setOpen={setOpenChangePasswordDialog}
-        />
-      )}
+      <ResponsivePopup {...formInfo} open={open} setOpen={setOpen}>
+        <ChangePasswordForm onClose={() => setOpen(false)} />
+      </ResponsivePopup>
     </>
   )
 }

@@ -27,6 +27,7 @@ This is an **unofficial, community-made** starter project built with **TanStack 
 
 - ✅ Email sign up - send otp via email after sign up successfully (manual/auto verify otp)
 - ✅ Email sign in - email verification (require)
+- ✅ Forgot/Reset/Change password, permanently delete account
 - ✅ Profile page displaying account information
 - ✅ Auto-generated avatar on sign up (via [DiceBear](https://www.dicebear.com/))
 - ✅ Responsive header - shows **Sign in / Sign up** buttons when logged out, and an avatar dropdown (Profile / Sign out) when logged in

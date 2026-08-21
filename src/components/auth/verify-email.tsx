@@ -1,20 +1,6 @@
 // verify-email-popup.tsx
 import { Button } from '#/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '#/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from '#/components/ui/drawer'
-import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
@@ -27,7 +13,6 @@ import {
 import { Label } from '#/components/ui/label'
 import type { verificationEmailFormValues } from '#/features/auth/schema.tsx'
 import { checkEmailVerifiedServerFn } from '#/features/auth/server/auth.ts'
-import { useIsMobile } from '#/hooks/use-is-mobile'
 import { authClient } from '#/lib/auth-client'
 import { isValidEmail } from '#/utils/is-valid-email'
 import { getRouteApi } from '@tanstack/react-router'
@@ -35,6 +20,7 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { MailIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import ResponsivePopup from '../ui/responsive-popup'
 
 const Route = getRouteApi('/_authentication/sign-in')
 
@@ -49,10 +35,8 @@ const VerifyEmailFormContent = ({
   onVerify,
   onClose,
   isVerifying,
-}: {
-  onVerify: PopupProps['onVerify']
+}: Pick<PopupProps, 'onVerify' | 'isVerifying'> & {
   onClose: () => void
-  isVerifying: boolean
 }) => {
   const { email: emailFromUrl } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -165,70 +149,25 @@ const VerifyEmailFormContent = ({
   )
 }
 
-const DesktopDialog = ({
-  open,
-  setOpen,
-  onVerify,
-  isVerifying,
-}: PopupProps) => (
-  <Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent className="max-w-fit!">
-      <DialogHeader>
-        <DialogTitle>Verify Account</DialogTitle>
-        <DialogDescription>
-          Enter your email and the OTP code sent to it to verify your account
-        </DialogDescription>
-      </DialogHeader>
-      <VerifyEmailFormContent
-        isVerifying={isVerifying}
-        onVerify={onVerify}
-        onClose={() => setOpen(false)}
-      />
-    </DialogContent>
-  </Dialog>
-)
-
-const MobileDrawer = ({ open, setOpen, onVerify, isVerifying }: PopupProps) => (
-  <Drawer open={open} onOpenChange={setOpen}>
-    <DrawerContent className="p-4">
-      <DrawerHeader>
-        <DrawerTitle>Verify Account</DrawerTitle>
-        <DrawerDescription>
-          Enter your email and the OTP code sent to it to verify your account
-        </DrawerDescription>
-      </DrawerHeader>
-      <div className="px-2 pb-8">
-        <VerifyEmailFormContent
-          isVerifying={isVerifying}
-          onVerify={onVerify}
-          onClose={() => setOpen(false)}
-        />
-      </div>
-    </DrawerContent>
-  </Drawer>
-)
-
 const VerifyEmailPopup = ({
   open,
   setOpen,
   onVerify,
   isVerifying,
 }: PopupProps) => {
-  const isMobile = useIsMobile()
-  return isMobile ? (
-    <MobileDrawer
+  return (
+    <ResponsivePopup
+      title="Verify Account"
+      description="Enter your email and the OTP code sent to it to verify your account"
       open={open}
       setOpen={setOpen}
-      onVerify={onVerify}
-      isVerifying={isVerifying}
-    />
-  ) : (
-    <DesktopDialog
-      open={open}
-      setOpen={setOpen}
-      onVerify={onVerify}
-      isVerifying={isVerifying}
-    />
+    >
+      <VerifyEmailFormContent
+        isVerifying={isVerifying}
+        onVerify={onVerify}
+        onClose={() => setOpen(false)}
+      />
+    </ResponsivePopup>
   )
 }
 

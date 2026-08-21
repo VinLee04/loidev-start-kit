@@ -1,20 +1,6 @@
 // forgot-password-popup.tsx
 import { Button } from '#/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '#/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from '#/components/ui/drawer'
-import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
@@ -31,7 +17,6 @@ import {
   requestResetPasswordServerFn,
   resetPasswordOTPServerFn,
 } from '#/features/auth/server/auth.ts'
-import { useIsMobile } from '#/hooks/use-is-mobile'
 import { isValidEmail } from '#/utils/is-valid-email'
 import { getRouteApi } from '@tanstack/react-router'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
@@ -39,6 +24,7 @@ import { MailIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { PasswordInputField } from '../ui/password-input-field'
+import ResponsivePopup from '../ui/responsive-popup'
 
 const Route = getRouteApi('/_authentication/sign-in')
 
@@ -51,10 +37,10 @@ type PopupProps = {
 
 const ResetPasswordFormContent = ({
   onResetPassword,
-  isLoading,
+  isResetting: isLoading,
 }: {
   onResetPassword: PopupProps['onResetPassword']
-  isLoading: boolean
+  isResetting: boolean
 }) => {
   const { email: emailFromUrl, otp: otpFromUrl } = Route.useSearch()
 
@@ -171,63 +157,16 @@ const ResetPasswordFormContent = ({
           resending
         }
       >
-        {isLoading ? 'Loading...' : 'Change Password'}
+        {isLoading ? 'Changing...' : 'Change Password'}
       </Button>
     </form>
   )
 }
 
-const DesktopDialog = ({
-  open,
-  setOpen,
-  onResetPassword,
-  isSubmitting,
-}: PopupProps) => (
-  <Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent className="max-w-fit!">
-      <DialogHeader>
-        <DialogTitle>Forgot Password</DialogTitle>
-        <DialogDescription>
-          Enter your email and the OTP code sent to it to reset your password
-        </DialogDescription>
-      </DialogHeader>
-      <ResetPasswordFormContent
-        isLoading={isSubmitting}
-        onResetPassword={onResetPassword}
-      />
-    </DialogContent>
-  </Dialog>
-)
-
-const MobileDrawer = ({
-  open,
-  setOpen,
-  onResetPassword,
-  isSubmitting,
-}: PopupProps) => (
-  <Drawer open={open} onOpenChange={setOpen}>
-    <DrawerContent className="p-4">
-      <DrawerHeader>
-        <DrawerTitle>Forgot Password</DrawerTitle>
-        <DrawerDescription>
-          Enter your email and the OTP code sent to it to reset your password
-        </DrawerDescription>
-      </DrawerHeader>
-      <div className="px-2 pb-8">
-        <ResetPasswordFormContent
-          isLoading={isSubmitting}
-          onResetPassword={onResetPassword}
-        />
-      </div>
-    </DrawerContent>
-  </Drawer>
-)
-
 const ForgotPasswordPopup = ({
   open,
   setOpen,
 }: Omit<PopupProps, 'onResetPassword' | 'isSubmitting'>) => {
-  const isMobile = useIsMobile()
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const handleResetPassword = async (data: ResetPasswordFormValues) => {
@@ -243,20 +182,18 @@ const ForgotPasswordPopup = ({
       .finally(() => setIsSubmitting(false))
   }
 
-  return isMobile ? (
-    <MobileDrawer
+  return (
+    <ResponsivePopup
+      title="Forgot Password"
+      description="Enter your email and the OTP code sent to it to reset your password"
       open={open}
       setOpen={setOpen}
-      onResetPassword={handleResetPassword}
-      isSubmitting={isSubmitting}
-    />
-  ) : (
-    <DesktopDialog
-      open={open}
-      setOpen={setOpen}
-      onResetPassword={handleResetPassword}
-      isSubmitting={isSubmitting}
-    />
+    >
+      <ResetPasswordFormContent
+        isResetting={isSubmitting}
+        onResetPassword={handleResetPassword}
+      />
+    </ResponsivePopup>
   )
 }
 

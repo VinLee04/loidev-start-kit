@@ -89,11 +89,14 @@ function RouteComponent() {
         break
 
       case 'auto-verify':
-        navigate({
-          to: '.',
-          search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
-          replace: true,
-        })
+        if (email && otp) {
+          performVerify({ email, otp })
+          navigate({
+            to: '.',
+            search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
+            replace: true,
+          })
+        }
         break
 
       case 'reset-password':
@@ -107,24 +110,6 @@ function RouteComponent() {
 
       default:
         break
-    }
-
-    if (status === 'auto-verify' && email && otp) {
-      performVerify({ email, otp })
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
-        replace: true,
-      })
-    }
-
-    if (status === 'manual-verify') {
-      setDisplayVerifyEmailForm(true)
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, status: undefined, otp: undefined }),
-        replace: true,
-      })
     }
   }, [status])
 
@@ -160,7 +145,6 @@ function RouteComponent() {
         }
       >
         <SignInForm />
-        {/* TODO: Tính năng Quên mật khẩu */}
         {/* TODO: Phương thức đăng nhập bằng mxh */}
       </AuthWrapper>
       <VerifyEmailPopup
